@@ -101,7 +101,9 @@ El sistema está dividido por capas:
 [IMAGENES]
 [IMAGENES]
 
-⚙️ Tecnologías
+---
+
+## ⚙️ Tecnologías
 Jakarta EE 10
 
 JAX-RS (API REST)
