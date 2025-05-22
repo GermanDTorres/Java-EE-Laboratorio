@@ -3,36 +3,54 @@ package moduloTransferencia.interfase;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
+import moduloTransferencia.aplicacion.ServicioTransferencia;
 import moduloTransferencia.aplicacion.impl.ServicioTransferenciaImpl;
-import moduloTransferencia.dominio.Transferencia;
-import moduloTransferencia.infraestructura.persistencia.RepositorioTransferenciaMemoria;
+import moduloTransferencia.dominio.Deposito;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 
 @Path("/transferencias")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class TransferenciaAPI {
 
-    private static final RepositorioTransferenciaMemoria repositorio = new RepositorioTransferenciaMemoria();
-    private final ServicioTransferenciaImpl servicio = new ServicioTransferenciaImpl(repositorio);
+    private final ServicioTransferencia servicio = new ServicioTransferenciaImpl();
 
     @POST
-    @Path("/notificar")
-    public Response recibirNotificacion(String info) {
-        servicio.recibirNotificacionTransferenciaDesdeMedioPago(info);
-        return Response.ok().build();
+    @Path("/notificacion")
+    public Response recibirNotificacion(Map<String, Object> datosTransferencia) {
+        try {
+            servicio.recibirNotificacionTransferenciaDesdeMedioPago(datosTransferencia);
+            return Response.ok().build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Error al procesar notificación: " + e.getMessage())
+                    .build();
+        }
     }
 
     @GET
-    @Path("/consultar")
-    public List<Transferencia> consultarDepositos(
-            @QueryParam("comercioId") String comercioId,
-            @QueryParam("desde") String desde,
-            @QueryParam("hasta") String hasta
-    ) {
-        return servicio.consultarDepositos(comercioId, LocalDate.parse(desde), LocalDate.parse(hasta));
+    @Path("/depositos")
+    public Response consultarDepositos(
+            @QueryParam("rutComercio") String rutComercio,
+            @QueryParam("fechaDesde") String fechaDesdeStr,
+            @QueryParam("fechaHasta") String fechaHastaStr) {
+
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+            LocalDateTime fechaDesde = LocalDateTime.parse(fechaDesdeStr, formatter);
+            LocalDateTime fechaHasta = LocalDateTime.parse(fechaHastaStr, formatter);
+
+            List<Deposito> depositos = servicio.consultarDepositos(rutComercio, fechaDesde, fechaHasta);
+            return Response.ok(depositos).build();
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Error en parámetros de consulta: " + e.getMessage())
+                    .build();
+        }
     }
 }

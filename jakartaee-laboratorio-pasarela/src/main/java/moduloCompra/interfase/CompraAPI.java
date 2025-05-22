@@ -1,35 +1,146 @@
 package moduloCompra.interfase;
 
-
-import moduloCompra.aplicacion.ServicioCompra;
-import moduloCompra.aplicacion.impl.ServicioCompraImpl;
-import moduloCompra.dominio.Compra;
-import moduloCompra.infraestructura.persistencia.RepositorioCompraMemoria;
-
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
-import java.util.List;
+import jakarta.ws.rs.core.Response;
+import moduloCompra.aplicacion.ServicioCompra;
+import moduloCompra.aplicacion.ServicioResumenVentas;
+import moduloCompra.aplicacion.impl.ServicioCompraImpl;
+import moduloCompra.aplicacion.impl.ServicioResumenVentasImpl;
+import moduloCompra.dominio.Compra;
+import moduloCompra.infraestructura.persistencia.RepositorioCompraMemoria;
+import moduloComercio.aplicacion.ServicioComercio;
+import moduloComercio.aplicacion.impl.ServicioComercioImpl;
+import moduloComercio.infraestructura.persistencia.RepositorioComercioMemoria;
+import moduloMonitoreo.aplicacion.ServicioMonitoreo;
+import moduloMonitoreo.aplicacion.impl.ServicioMonitoreoImpl;
 
-@Path("/compras")
+import java.text.SimpleDateFormat;
+import java.util.Base64;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+@Path("/compra")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class CompraAPI {
-    private final ServicioCompra servicio = new ServicioCompraImpl(new RepositorioCompraMemoria());
+
+    private static final RepositorioCompraMemoria repo = new RepositorioCompraMemoria();
+    private static final RepositorioComercioMemoria repoComercio = new RepositorioComercioMemoria();
+    private static final ServicioMonitoreo servicioMonitoreo = new ServicioMonitoreoImpl();
+    private static final ServicioComercio servicioComercio = new ServicioComercioImpl(repoComercio);
+
+    private final ServicioCompra servicio;
+    private final ServicioResumenVentas servicioResumen;
+
+    public CompraAPI() {
+        this.servicio = new ServicioCompraImpl(repo, servicioMonitoreo, servicioComercio);
+        this.servicioResumen = new ServicioResumenVentasImpl(repo);
+    }
 
     @POST
-    public void registrarCompra(CompraDTO dto) {
-        Compra compra = new Compra(dto.id, dto.idComercio, dto.monto);
-        servicio.procesarCompra(compra);
+    @Path("/procesar")
+    public Response procesarPago(Compra compra) {
+        try {
+            compra.setFecha(new Date());
+            Compra resultado = servicio.procesarCompra(compra);
+            if (resultado.getEstado() == moduloCompra.dominio.EstadoCompra.APROBADA) {
+                return Response.ok(Map.of("mensaje", "Pago aprobado y procesado correctamente")).build();
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(Map.of("error", "Pago rechazado: monto inválido o saldo insuficiente"))
+                        .build();
+            }
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(Map.of("error", "Error al procesar el pago: " + e.getMessage()))
+                    .build();
+        }
     }
 
     @GET
-    public List<Compra> obtenerCompras() {
+    @Path("/listar")
+    public List<Compra> listarCompras() {
         return servicio.obtenerCompras();
     }
 
     @GET
-    @Path("/{id}")
-    public Compra obtenerCompra(@PathParam("id") String id) {
-        return servicio.obtenerCompra(id);
+    @Path("/resumenDiario/{idComercio}")
+    public Response resumenDiario(
+            @PathParam("idComercio") String idComercio,
+            @HeaderParam("Authorization") String authHeader) {
+
+        if (!autenticar(idComercio, authHeader)) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(Map.of("error", "Acceso no autorizado")).build();
+        }
+
+        List<Compra> resumen = servicioResumen.resumenVentasDiarias(idComercio);
+        return Response.ok(resumen).build();
+    }
+
+    @GET
+    @Path("/resumenPeriodo")
+    public Response resumenPorPeriodo(
+            @QueryParam("idComercio") String idComercio,
+            @QueryParam("desde") String desde,
+            @QueryParam("hasta") String hasta,
+            @HeaderParam("Authorization") String authHeader) {
+
+        if (!autenticar(idComercio, authHeader)) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(Map.of("error", "Acceso no autorizado")).build();
+        }
+
+        if (desde == null || hasta == null || desde.isBlank() || hasta.isBlank()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(Map.of("error", "Parámetros 'desde' y 'hasta' son obligatorios"))
+                    .build();
+        }
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date fDesde = sdf.parse(desde);
+            Date fHasta = sdf.parse(hasta);
+            List<Compra> resumen = servicioResumen.resumenVentasPorPeriodo(idComercio, fDesde, fHasta);
+            return Response.ok(resumen).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(Map.of("error", "Formato de fecha incorrecto. Use yyyy-MM-dd"))
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/montoActual/{idComercio}")
+    public Response montoActual(
+            @PathParam("idComercio") String idComercio,
+            @HeaderParam("Authorization") String authHeader) {
+
+        if (!autenticar(idComercio, authHeader)) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(Map.of("error", "Acceso no autorizado")).build();
+        }
+
+        double monto = servicioResumen.montoActualVendido(idComercio);
+        return Response.ok(Map.of("montoActual", monto)).build();
+    }
+
+    // Método privado para autenticación básica con validación mejorada
+    private boolean autenticar(String idComercio, String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Basic ")) {
+            return false;
+        }
+
+        try {
+            String base64Credentials = authHeader.substring("Basic ".length());
+            String credentials = new String(Base64.getDecoder().decode(base64Credentials));
+            String[] values = credentials.split(":", 2);
+            if (values.length != 2) return false;
+            String username = values[0];
+            String password = values[1];
+
+            return username.equals(idComercio) && servicioComercio.autenticar(idComercio, password);
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

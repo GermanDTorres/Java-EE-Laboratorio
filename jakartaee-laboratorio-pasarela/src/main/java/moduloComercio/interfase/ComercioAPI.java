@@ -1,21 +1,20 @@
 package moduloComercio.interfase;
 
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import moduloComercio.aplicacion.ServicioComercio;
 import moduloComercio.aplicacion.impl.ServicioComercioImpl;
 import moduloComercio.dominio.Comercio;
 import moduloComercio.infraestructura.persistencia.RepositorioComercioMemoria;
 
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/comercios")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ComercioAPI {
-    
-    // Instancia estática y compartida del repositorio
+
     private static final RepositorioComercioMemoria repositorio = new RepositorioComercioMemoria();
     private final ServicioComercio servicio = new ServicioComercioImpl(repositorio);
 
@@ -40,5 +39,25 @@ public class ComercioAPI {
         }
         return Response.ok(comercio).build();
     }
-}
 
+    @PUT
+    @Path("/{id}/contrasena")
+    public Response cambiarContrasena(@PathParam("id") String id, @QueryParam("nueva") String nueva) {
+        servicio.cambioContrasena(id, nueva);
+        return Response.ok().build();
+    }
+
+    @POST
+    @Path("/{id}/pos/{posId}")
+    public Response altaPOS(@PathParam("id") String comercioId, @PathParam("posId") int posId) {
+        servicio.altaPOS(comercioId, posId);
+        return Response.status(Response.Status.CREATED).build();
+    }
+
+    @PUT
+    @Path("/{id}/pos/{posId}/estado")
+    public Response cambiarEstadoPOS(@PathParam("id") String comercioId, @PathParam("posId") int posId, @QueryParam("activo") boolean activo) {
+        servicio.cambiarEstadoPOS(comercioId, posId, activo);
+        return Response.ok().build();
+    }
+}
