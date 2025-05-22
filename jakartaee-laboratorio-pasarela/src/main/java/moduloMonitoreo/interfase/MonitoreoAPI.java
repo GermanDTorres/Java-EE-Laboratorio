@@ -11,40 +11,36 @@ import moduloMonitoreo.aplicacion.impl.ServicioMonitoreoImpl;
 @Consumes(MediaType.APPLICATION_JSON)
 public class MonitoreoAPI {
 
-    private static final ServicioMonitoreo servicio = new ServicioMonitoreoImpl();
+    private final ServicioMonitoreo servicio;
 
-    @POST
-    @Path("/pago")
-    public Response notificarPago(String mensaje) {
-        servicio.notificarPago(mensaje, 0);
-        return Response.ok().build();
+    public MonitoreoAPI() {
+        this.servicio = new ServicioMonitoreoImpl();
     }
 
     @POST
-    @Path("/pago-ok")
-    public Response notificarPagoOk(String mensaje) {
-        servicio.notificarPagoOk(mensaje, 0);
-        return Response.ok().build();
+    @Path("/notificarPago")
+    public Response notificarPago(@QueryParam("idCompra") String idCompra,
+                                  @QueryParam("idComercio") String idComercio,
+                                  @QueryParam("monto") double monto) {
+        servicio.notificarPago(idCompra, idComercio, monto);
+        return Response.ok().entity("Notificación de pago recibida").build();
     }
 
     @POST
-    @Path("/pago-error")
-    public Response notificarPagoError(String mensaje) {
-        servicio.notificarPagoError(mensaje, mensaje);
-        return Response.ok().build();
+    @Path("/notificarPagoOk")
+    public Response notificarPagoOk(@QueryParam("idCompra") String idCompra,
+                                    @QueryParam("idComercio") String idComercio,
+                                    @QueryParam("monto") double monto) {
+        servicio.notificarPagoOk(idCompra, idComercio, monto);
+        return Response.ok().entity("Notificación de pago OK recibida").build();
     }
 
     @POST
-    @Path("/transferencia")
-    public Response notificarTransferencia(String mensaje) {
-        servicio.notificarTransferencia(mensaje, mensaje, 0);
-        return Response.ok().build();
-    }
-
-    @POST
-    @Path("/reclamo")
-    public Response notificarReclamoComercio(String mensaje) {
-        servicio.notificarReclamoComercio(mensaje, mensaje);
-        return Response.ok().build();
+    @Path("/notificarPagoError")
+    public Response notificarPagoError(@QueryParam("idCompra") String idCompra,
+                                       @QueryParam("idComercio") String idComercio,
+                                       @QueryParam("monto") double monto) {
+        servicio.notificarPagoError(idCompra, idComercio, monto);
+        return Response.ok().entity("Notificación de pago error recibida").build();
     }
 }

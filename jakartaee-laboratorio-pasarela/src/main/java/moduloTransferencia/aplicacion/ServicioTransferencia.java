@@ -1,10 +1,12 @@
 package moduloTransferencia.aplicacion;
 
-import java.time.LocalDate;
+import moduloTransferencia.dominio.Deposito;
+
+import java.time.LocalDateTime;
 import java.util.List;
-import moduloTransferencia.dominio.Transferencia;
+import java.util.Map;
 
 public interface ServicioTransferencia {
-    void recibirNotificacionTransferenciaDesdeMedioPago(String info);
-    List<Transferencia> consultarDepositos(String comercioId, LocalDate desde, LocalDate hasta);
+    void recibirNotificacionTransferenciaDesdeMedioPago(Map<String, Object> datosTransferencia);
+    List<Deposito> consultarDepositos(String rutComercio, LocalDateTime fechaDesde, LocalDateTime fechaHasta);
 }

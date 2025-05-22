@@ -1,43 +1,66 @@
 package moduloTransferencia.dominio;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Deposito {
     private String id;
-    private String idComercio;
-    private double monto;
-    private LocalDate fecha;
+    private String rutComercio;
+    private String cuentaBanco;
+    private double montoBruto;
+    private double comisionDescontada;
+    private double montoNeto;
+    private LocalDateTime fechaDeposito;
 
-    public Deposito(String id, String idComercio, double monto, LocalDate fecha) {
+    public Deposito(String id, String rutComercio, String cuentaBanco, double montoBruto, double comisionDescontada, LocalDateTime fechaDeposito) {
         this.id = id;
-        this.idComercio = idComercio;
-        this.monto = monto;
-        this.fecha = fecha;
+        this.rutComercio = rutComercio;
+        this.cuentaBanco = cuentaBanco;
+        this.montoBruto = montoBruto;
+        this.comisionDescontada = comisionDescontada;
+        this.montoNeto = montoBruto - comisionDescontada;
+        this.fechaDeposito = fechaDeposito;
     }
+
+    // Getters y setters
 
     public String getId() {
         return id;
     }
 
-    public String getIdComercio() {
-        return idComercio;
+    public String getRutComercio() {
+        return rutComercio;
     }
 
-    public double getMonto() {
-        return monto;
+    public String getCuentaBanco() {
+        return cuentaBanco;
     }
 
-    public LocalDate getFecha() {
-        return fecha;
+    public double getMontoBruto() {
+        return montoBruto;
+    }
+
+    public double getComisionDescontada() {
+        return comisionDescontada;
+    }
+
+    public double getMontoNeto() {
+        return montoNeto;
+    }
+
+    public LocalDateTime getFechaDeposito() {
+        return fechaDeposito;
     }
 
     @Override
     public String toString() {
         return "Deposito{" +
                 "id='" + id + '\'' +
-                ", idComercio='" + idComercio + '\'' +
-                ", monto=" + monto +
-                ", fecha=" + fecha +
+                ", rutComercio='" + rutComercio + '\'' +
+                ", cuentaBanco='" + cuentaBanco + '\'' +
+                ", montoBruto=" + montoBruto +
+                ", comisionDescontada=" + comisionDescontada +
+                ", montoNeto=" + montoNeto +
+                ", fechaDeposito=" + fechaDeposito +
                 '}';
     }
 }

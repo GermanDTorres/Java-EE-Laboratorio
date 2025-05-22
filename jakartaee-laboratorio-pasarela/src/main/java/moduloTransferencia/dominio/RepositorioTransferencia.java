@@ -1,9 +1,8 @@
 package moduloTransferencia.dominio;
 
-import java.time.LocalDate;
-import java.util.List;
+import java.util.Collection;
 
 public interface RepositorioTransferencia {
-    void guardar(Transferencia transferencia);
-    List<Transferencia> obtenerPorComercioYRango(String comercioId, LocalDate desde, LocalDate hasta);
+    void registrarDeposito(Deposito deposito);
+    Collection<Deposito> obtenerDepositos();
 }

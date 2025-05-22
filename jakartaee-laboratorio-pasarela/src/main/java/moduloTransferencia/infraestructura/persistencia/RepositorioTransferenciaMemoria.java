@@ -1,31 +1,23 @@
 package moduloTransferencia.infraestructura.persistencia;
 
-import moduloTransferencia.dominio.Transferencia;
-import moduloTransferencia.dominio.RepositorioTransferencia;
-
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+
+import moduloTransferencia.dominio.Deposito;
+import moduloTransferencia.dominio.RepositorioTransferencia;
 
 public class RepositorioTransferenciaMemoria implements RepositorioTransferencia {
 
-    private static final List<Transferencia> BD = new ArrayList<>();
+    private static final List<Deposito> DEPOSITOS = new ArrayList<>();
 
     @Override
-    public void guardar(Transferencia transferencia) {
-        BD.add(transferencia);
+    public void registrarDeposito(Deposito deposito) {
+        DEPOSITOS.add(deposito);
     }
 
     @Override
-    public List<Transferencia> obtenerPorComercioYRango(String comercioId, LocalDate desde, LocalDate hasta) {
-        List<Transferencia> resultado = new ArrayList<>();
-        for (Transferencia t : BD) {
-            if (t.comercioId.equals(comercioId) &&
-                (t.fecha.isEqual(desde) || t.fecha.isAfter(desde)) &&
-                (t.fecha.isEqual(hasta) || t.fecha.isBefore(hasta))) {
-                resultado.add(t);
-            }
-        }
-        return resultado;
+    public Collection<Deposito> obtenerDepositos() {
+        return DEPOSITOS;
     }
 }
