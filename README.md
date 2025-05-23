@@ -96,16 +96,16 @@ El sistema está dividido por capas:
 
 ## 📈 Diagramas de Secuencia (Sistema)
 
--DSS 1: Registrar Comercio
+## DSS 1: Registrar Comercio
 ![Image](https://github.com/user-attachments/assets/03130e1d-c824-490a-a022-579d8b558804)
 
--DSS 2: Procesar Compra
+## DSS 2: Procesar Compra
 ![Image](https://github.com/user-attachments/assets/4d90f847-c88f-4281-beb6-a0763fa37c59)
 
--DSS 3: Transferencia con Depósito
+## DSS 3: Transferencia con Depósito
 ![Image](https://github.com/user-attachments/assets/359d7926-5289-418c-b5c8-4d3280db4b47)
 
--DSS 4: Autenticación para Reportes
+## DSS 4: Autenticación para Reportes
 ![Image](https://github.com/user-attachments/assets/f2fee370-ef8e-4055-b9b6-c058c38d99a4)
 
 ---
