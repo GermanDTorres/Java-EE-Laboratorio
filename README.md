@@ -96,7 +96,7 @@ El sistema está dividido por capas:
 
 ## 📈 Diagramas de Secuencia (Sistema)
 
-[IMAGENES]
+![Image](https://github.com/user-attachments/assets/03130e1d-c824-490a-a022-579d8b558804)
 [IMAGENES]
 [IMAGENES]
 [IMAGENES]
