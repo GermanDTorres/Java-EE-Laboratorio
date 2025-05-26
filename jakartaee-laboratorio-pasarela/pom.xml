@@ -23,7 +23,11 @@
         <wildfly-plugin.version>4.1.0.Final</wildfly-plugin.version>
 
         <junit.version>5.8.2</junit.version>
+<<<<<<< HEAD
         <mockito.version>4.5.1</mockito.version>
+=======
+        <mockito.verson>4.5.1</mockito.verson>
+>>>>>>> 0a79886fe8e96b2ca7bef9a3668ac3dbd2f934e4
         <weld.version>5.1.0.Final</weld.version>
     </properties>
 
@@ -50,6 +54,7 @@
             <version>${weld.version}</version>
         </dependency>
 
+<<<<<<< HEAD
         <!-- MariaDB Driver (IMPORTANTE) -->
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
@@ -99,10 +104,62 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.32</version>
+=======
+        <!-- Test -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.verson}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito.verson}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.24.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.weld</groupId>
+            <artifactId>weld-junit5</artifactId>
+            <version>4.0.0.Final</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.32</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+            <version>3.5.3.Final</version>
+>>>>>>> 0a79886fe8e96b2ca7bef9a3668ac3dbd2f934e4
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+<<<<<<< HEAD
             <groupId>org.jboss.logging</groupId>
             <artifactId>jboss-logging</artifactId>
             <version>3.5.3.Final</version>
@@ -131,6 +188,29 @@
                 <version>${compiler-plugin.version}</version>
             </plugin>
 
+=======
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-commons</artifactId>
+            <version>1.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-influx</artifactId>
+            <version>1.13.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>jakartaee-laboratorio-pasarela</finalName>
+        <plugins>
+            <!-- Compilación -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${compiler-plugin.version}</version>
+            </plugin>
+
+>>>>>>> 0a79886fe8e96b2ca7bef9a3668ac3dbd2f934e4
             <!-- Generar WAR -->
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
@@ -140,6 +220,35 @@
                 </configuration>
             </plugin>
 
+<<<<<<< HEAD
+=======
+            <!-- Descargar driver de MariaDB -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-mariadb-driver</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.mariadb.jdbc</groupId>
+                                    <artifactId>mariadb-java-client</artifactId>
+                                    <version>3.3.3</version>
+                                    <outputDirectory>${project.basedir}</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+>>>>>>> 0a79886fe8e96b2ca7bef9a3668ac3dbd2f934e4
             <!-- Plugin WildFly para levantar el servidor y aplicar scripts -->
             <plugin>
                 <groupId>org.wildfly.plugins</groupId>
@@ -149,7 +258,11 @@
                     <version>${wildfly.version}</version>
                     <server-config>standalone-full.xml</server-config>
                     <scripts>
+<<<<<<< HEAD
                         <script>config.cli</script>
+=======
+                        <script>config.cli</script> <!-- Tu script de configuración -->
+>>>>>>> 0a79886fe8e96b2ca7bef9a3668ac3dbd2f934e4
                     </scripts>
                     <add-user>
                         <users>
