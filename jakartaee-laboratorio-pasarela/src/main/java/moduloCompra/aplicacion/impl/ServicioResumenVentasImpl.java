@@ -1,22 +1,21 @@
 package moduloCompra.aplicacion.impl;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import moduloCompra.aplicacion.ServicioResumenVentas;
 import moduloCompra.dominio.Compra;
-import moduloCompra.infraestructura.persistencia.RepositorioCompraMemoria;
+import moduloCompra.dominio.RepositorioCompra;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
+@ApplicationScoped
 public class ServicioResumenVentasImpl implements ServicioResumenVentas {
 
-    private final RepositorioCompraMemoria repositorio;
-
-    public ServicioResumenVentasImpl(RepositorioCompraMemoria repositorio) {
-        this.repositorio = Objects.requireNonNull(repositorio);
-    }
+    @Inject
+    private RepositorioCompra repositorio;
 
     @Override
     public List<Compra> resumenVentasDiarias(String idComercio) {
@@ -24,7 +23,7 @@ public class ServicioResumenVentasImpl implements ServicioResumenVentas {
             return List.of();
         }
         Date hoy = new Date();
-        return repositorio.obtenerTodas().stream()
+        return repositorio.obtenerCompras().stream()
                 .filter(c -> idComercio.equals(c.getIdComercio())
                         && esMismoDia(c.getFecha(), hoy))
                 .collect(Collectors.toList());
@@ -35,8 +34,7 @@ public class ServicioResumenVentasImpl implements ServicioResumenVentas {
         if (idComercio == null || idComercio.isBlank() || desde == null || hasta == null) {
             return List.of();
         }
-
-        return repositorio.obtenerTodas().stream()
+        return repositorio.obtenerCompras().stream()
                 .filter(c -> idComercio.equals(c.getIdComercio())
                         && !c.getFecha().before(desde)
                         && !c.getFecha().after(hasta))
@@ -49,7 +47,7 @@ public class ServicioResumenVentasImpl implements ServicioResumenVentas {
             return 0.0;
         }
         Date hoy = new Date();
-        return repositorio.obtenerTodas().stream()
+        return repositorio.obtenerCompras().stream()
                 .filter(c -> idComercio.equals(c.getIdComercio())
                         && esMismoDia(c.getFecha(), hoy))
                 .mapToDouble(Compra::getMonto)

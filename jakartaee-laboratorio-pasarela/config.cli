@@ -1,0 +1,21 @@
+connect
+try
+    module add --name=org.mariadb --resources=./mariadb-java-client-3.3.3.jar --dependencies=javax.api,javax.transaction.api
+    echo "Se registra el modulo para driver mariadb"
+catch
+    echo "El modulo para el driver ya esta registrado"
+end-try
+
+try
+    /subsystem=datasources/jdbc-driver=mariadb:add(driver-name="mariadb",driver-module-name="org.mariadb",driver-class-name=org.mariadb.jdbc.Driver)
+    echo "Se registra driver MariaDB"
+catch
+    echo "No se registra el driver, ya esta registrado"
+end-try
+
+try
+    data-source add --name=tallerjavadb --jndi-name=java:jboss/MariaDB --driver-name=mariadb --connection-url=jdbc:mariadb://localhost:3306/tallerjava --user-name=root --password=rootpass1234
+    echo "Se crea nuevo datasource para tallerjavadb"
+catch
+    echo "No se crea datasource, ya existe"
+end-try

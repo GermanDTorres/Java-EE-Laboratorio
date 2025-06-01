@@ -7,16 +7,11 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import moduloCompra.aplicacion.ServicioCompra;
 import moduloCompra.aplicacion.ServicioResumenVentas;
-import moduloCompra.aplicacion.impl.ServicioCompraImpl;
-import moduloCompra.aplicacion.impl.ServicioResumenVentasImpl;
 import moduloCompra.dominio.Compra;
-import moduloCompra.infraestructura.persistencia.RepositorioCompraMemoria;
 import moduloComercio.aplicacion.ServicioComercio;
-import moduloComercio.aplicacion.impl.ServicioComercioImpl;
-import moduloComercio.infraestructura.persistencia.RepositorioComercioMemoria;
 import moduloMonitoreo.aplicacion.ServicioMonitoreo;
-//import moduloMonitoreo.aplicacion.impl.ServicioMonitoreoImpl;
-import moduloMonitoreo.aplicacion.ServicioMonitoreoQualifier;
+import moduloMonitoreo.aplicacion.impl.ServicioMonitoreoImpl;
+//import moduloMonitoreo.aplicacion.ServicioMonitoreoQualifier;
 
 import java.text.SimpleDateFormat;
 import java.util.Base64;
@@ -36,26 +31,18 @@ public class CompraAPI {
  */   
  
 
-@Inject
-    private  RepositorioCompraMemoria repo;
-@Inject
-    private  RepositorioComercioMemoria repoComercio;
-@Inject
-//@ServicioMonitoreoQualifier("Default")
+
+    @Inject
+    private ServicioCompra servicio;
+
+    @Inject
+    private ServicioResumenVentas servicioResumen;
+
+    @Inject
+    private ServicioComercio servicioComercio;
+
+    @Inject
     private ServicioMonitoreo servicioMonitoreo;
-/*
-@Inject
-    private  ServicioComercio servicioComercio;
-*/
-    private final ServicioComercio servicioComercio = new ServicioComercioImpl(repoComercio);
-
-    private final ServicioCompra servicio;
-    private final ServicioResumenVentas servicioResumen;
-
-    public CompraAPI() {
-        this.servicio = new ServicioCompraImpl(repo, servicioMonitoreo, servicioComercio);
-        this.servicioResumen = new ServicioResumenVentasImpl(repo);
-    }
 
     @POST
     @Path("/procesar")
@@ -142,7 +129,6 @@ public class CompraAPI {
         return Response.ok(Map.of("montoActual", monto)).build();
     }
 
-    // Método privado para autenticación básica con validación mejorada
     private boolean autenticar(String idComercio, String authHeader) {
         if (authHeader == null || !authHeader.startsWith("Basic ")) {
             return false;

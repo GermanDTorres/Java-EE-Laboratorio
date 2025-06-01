@@ -23,7 +23,7 @@
         <wildfly-plugin.version>4.1.0.Final</wildfly-plugin.version>
 
         <junit.version>5.8.2</junit.version>
-        <mockito.verson>4.5.1</mockito.verson>
+        <mockito.version>4.5.1</mockito.version>
         <weld.version>5.1.0.Final</weld.version>
     </properties>
 
@@ -50,6 +50,13 @@
             <version>${weld.version}</version>
         </dependency>
 
+        <!-- MariaDB Driver (IMPORTANTE) -->
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>3.3.3</version>
+        </dependency>
+
         <!-- Test -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -66,13 +73,13 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>${mockito.verson}</version>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>${mockito.verson}</version>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -133,32 +140,6 @@
                 </configuration>
             </plugin>
 
-            <!-- Descargar driver de MariaDB -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.6.0</version>
-                <executions>
-                    <execution>
-                        <id>copy-mariadb-driver</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.mariadb.jdbc</groupId>
-                                    <artifactId>mariadb-java-client</artifactId>
-                                    <version>3.3.3</version>
-                                    <outputDirectory>${project.basedir}</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
             <!-- Plugin WildFly para levantar el servidor y aplicar scripts -->
             <plugin>
                 <groupId>org.wildfly.plugins</groupId>
@@ -168,7 +149,7 @@
                     <version>${wildfly.version}</version>
                     <server-config>standalone-full.xml</server-config>
                     <scripts>
-                        <script>config.cli</script> <!-- Tu script de configuración -->
+                        <script>config.cli</script>
                     </scripts>
                     <add-user>
                         <users>
@@ -184,3 +165,4 @@
         </plugins>
     </build>
 </project>
+
