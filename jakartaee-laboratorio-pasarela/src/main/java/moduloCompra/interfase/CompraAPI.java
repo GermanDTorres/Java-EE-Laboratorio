@@ -1,5 +1,7 @@
 package moduloCompra.interfase;
 
+import jakarta.inject.Inject;
+import jakarta.websocket.server.ServerEndpoint;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -13,7 +15,8 @@ import moduloComercio.aplicacion.ServicioComercio;
 import moduloComercio.aplicacion.impl.ServicioComercioImpl;
 import moduloComercio.infraestructura.persistencia.RepositorioComercioMemoria;
 import moduloMonitoreo.aplicacion.ServicioMonitoreo;
-import moduloMonitoreo.aplicacion.impl.ServicioMonitoreoImpl;
+//import moduloMonitoreo.aplicacion.impl.ServicioMonitoreoImpl;
+import moduloMonitoreo.aplicacion.ServicioMonitoreoQualifier;
 
 import java.text.SimpleDateFormat;
 import java.util.Base64;
@@ -26,10 +29,25 @@ import java.util.Map;
 @Consumes(MediaType.APPLICATION_JSON)
 public class CompraAPI {
 
+	/*
     private static final RepositorioCompraMemoria repo = new RepositorioCompraMemoria();
     private static final RepositorioComercioMemoria repoComercio = new RepositorioComercioMemoria();
     private static final ServicioMonitoreo servicioMonitoreo = new ServicioMonitoreoImpl();
-    private static final ServicioComercio servicioComercio = new ServicioComercioImpl(repoComercio);
+ */   
+ 
+
+@Inject
+    private  RepositorioCompraMemoria repo;
+@Inject
+    private  RepositorioComercioMemoria repoComercio;
+@Inject
+//@ServicioMonitoreoQualifier("Default")
+    private ServicioMonitoreo servicioMonitoreo;
+/*
+@Inject
+    private  ServicioComercio servicioComercio;
+*/
+    private final ServicioComercio servicioComercio = new ServicioComercioImpl(repoComercio);
 
     private final ServicioCompra servicio;
     private final ServicioResumenVentas servicioResumen;

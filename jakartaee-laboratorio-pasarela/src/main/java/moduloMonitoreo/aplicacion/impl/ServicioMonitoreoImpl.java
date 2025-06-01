@@ -1,7 +1,11 @@
 package moduloMonitoreo.aplicacion.impl;
 
+import jakarta.enterprise.inject.Default;
 import moduloMonitoreo.aplicacion.ServicioMonitoreo;
+//import moduloMonitoreo.aplicacion.ServicioMonitoreoQualifier;
 
+//@ServicioMonitoreoQualifier("Default")
+@Default
 public class ServicioMonitoreoImpl implements ServicioMonitoreo {
 
     @Override
