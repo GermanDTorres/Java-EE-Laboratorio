@@ -24,14 +24,13 @@ public class ServicioTransferenciaImpl implements ServicioTransferencia {
     private RepositorioDepositos repositorioDepositos;
 
     @Override
-    public void recibirNotificacionTransferenciaDesdeMedioPago(Map<String, Object> datosTransferencia) {
+    public void recibirNotificacionTransferencia(Map<String, Object> datosTransferencia) {
         if (datosTransferencia == null || datosTransferencia.isEmpty()) {
             LOGGER.severe("[Transferencia] Datos de transferencia vacíos o nulos.");
             return;
         }
 
         try {
-            // Validación y extracción de datos
             String rutComercio = getString(datosTransferencia, "rutComercio");
             String cuentaBanco = getString(datosTransferencia, "cuentaBanco");
             double montoBruto = getDouble(datosTransferencia, "monto");
@@ -66,8 +65,7 @@ public class ServicioTransferenciaImpl implements ServicioTransferencia {
         return repositorioDepositos.consultarPorComercioYRangoFechas(rutComercio, fechaDesde, fechaHasta);
     }
 
-    // --- Métodos auxiliares ---
-
+    // Métodos auxiliares para validar y parsear datos
     private String getString(Map<String, Object> map, String key) {
         Object value = map.get(key);
         if (value instanceof String && !((String) value).isBlank()) {

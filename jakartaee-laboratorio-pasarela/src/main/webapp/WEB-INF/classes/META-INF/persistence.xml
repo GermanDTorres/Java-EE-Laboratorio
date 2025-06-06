@@ -1,0 +1,14 @@
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.0">
+  <persistence-unit name="tallerjava" transaction-type="JTA">
+    <jta-data-source>java:jboss/MariaDB</jta-data-source>
+    <properties>
+      <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
+      <property name="jakarta.persistence.sql-load-script-source" value="/WEB-INF/classes/META-INF/initial_data.sql"/>
+      
+      <property name="hibernate.dialect" value="org.hibernate.dialect.MariaDBDialect"/>
+      <property name="hibernate.show_sql" value="true"/>
+      <property name="eclipselink.logging.level.sql" value="FINE"/>
+      <property name="eclipselink.logging.parameters" value="true"/>
+    </properties>
+  </persistence-unit>
+</persistence>
