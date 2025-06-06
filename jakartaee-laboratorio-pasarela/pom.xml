@@ -119,6 +119,52 @@
             <artifactId>micrometer-registry-influx</artifactId>
             <version>1.13.0</version>
         </dependency>
+		<dependency>
+			<groupId>com.bucket4j</groupId>
+			<artifactId>bucket4j-core</artifactId>
+			<version>8.10.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.ws</groupId>
+			<artifactId>jaxws-rt</artifactId>
+			<version>2.3.3</version>
+		</dependency>
+		<dependency>
+			<groupId>jakarta.ws.rs</groupId>
+			<artifactId>jakarta.ws.rs-api</artifactId>
+			<version>2.1.6</version> <!-- Use the latest stable version -->
+		</dependency>
+		<!--
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>4.0.5</version>
+		</dependency>
+	
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-xjc</artifactId>
+			<version>4.0.5</version>
+		</dependency>-->
+
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-core</artifactId>
+			<version>4.0.5</version>
+		</dependency>
+		<!--
+		<dependency>
+			<groupId>com.sun.xml.ws</groupId>
+			<artifactId>jaxws-tools</artifactId>
+			<version>4.0.3</version>
+		</dependency>-->
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.1</version>
+		</dependency>
+
+
     </dependencies>
 
     <build>
@@ -162,6 +208,55 @@
                     </add-user>
                 </configuration>
             </plugin>
+	    <plugin>
+		    <groupId>org.codehaus.mojo</groupId>
+		    <artifactId>jaxws-maven-plugin</artifactId>
+		    <version>2.6</version>
+		    <executions>
+			    <execution>
+				    <goals>
+					    <goal>wsimport</goal>
+					    <!--<goal>wsgen</goal>-->
+				    </goals>
+			    </execution>
+		    </executions>
+		    <configuration>
+			    <!-- The name of your generated source package -->
+			    <sei>moduloTransferencia.infraestructura.servicios.impl.BancoAPIimpl</sei>
+			    <genWsdl>true</genWsdl>
+			    <keep>true</keep>
+			    <verbose>true</verbose>
+			    <resourceDestDir>${basedir}/src/main/webapp/WEB-INF/wsdl</resourceDestDir>
+			    <sourceDestDir>${basedir}/src/main/java</sourceDestDir>
+			    <args>
+				    <arg>-classpath</arg>
+				    <arg>'/home/manuel/Documentos/Clases/Tecnologo/Java EE/Java-EE-Laboratorio/jakartaee-laboratorio-pasarela/target/classes'</arg>
+		    </args>
+			    <packageName>moduloTransferencia.infraestructura.servicios.impl</packageName>
+                        <wsdlFiles>
+				<wsdlFile>${basedir}/src/main/webapp/WEB-INF/wsdl/BancoAPIimplService.wsdl</wsdlFile>
+                        </wsdlFiles>
+		    </configuration>
+	    </plugin>
+	    <plugin>
+		    <groupId>org.codehaus.mojo</groupId>
+		    <artifactId>build-helper-maven-plugin</artifactId>
+		    <version>1.5</version>
+		    <executions>
+			    <execution>
+				    <id>add-source</id>
+				    <phase>generate-sources</phase>
+				    <goals>
+					    <goal>add-source</goal>
+				    </goals>
+				    <configuration>
+					    <sources>
+						    <source>${basedir}/src/main/java</source>
+					    </sources>
+				    </configuration>
+			    </execution>
+		    </executions>
+	    </plugin>
         </plugins>
     </build>
 </project>

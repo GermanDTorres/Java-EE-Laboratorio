@@ -1,12 +1,8 @@
 package moduloMonitoreo.aplicacion.impl;
 
-import jakarta.enterprise.inject.Default;
 import jakarta.enterprise.context.ApplicationScoped;
 import moduloMonitoreo.aplicacion.ServicioMonitoreo;
-//import moduloMonitoreo.aplicacion.ServicioMonitoreoQualifier;
 
-//@ServicioMonitoreoQualifier("Default")
-@Default
 @ApplicationScoped
 public class ServicioMonitoreoImpl implements ServicioMonitoreo {
 

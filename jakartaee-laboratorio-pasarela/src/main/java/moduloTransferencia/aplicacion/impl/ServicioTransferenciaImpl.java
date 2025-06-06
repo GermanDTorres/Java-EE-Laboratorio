@@ -1,5 +1,8 @@
 package moduloTransferencia.aplicacion.impl;
 
+import moduloTransferencia.infraestructura.servicios.impl.BancoAPIimplService;
+import moduloTransferencia.infraestructura.servicios.impl.BancoAPIimpl;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import moduloTransferencia.aplicacion.RepositorioDepositos;
@@ -14,6 +17,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import javax.xml.ws.WebServiceRef;
+
 @ApplicationScoped
 public class ServicioTransferenciaImpl implements ServicioTransferencia {
 
@@ -23,6 +28,10 @@ public class ServicioTransferenciaImpl implements ServicioTransferencia {
     @Inject
     private RepositorioDepositos repositorioDepositos;
 
+	@WebServiceRef(wsdlLocation="http://localhost:8080/castlemock/mock/soap/project/TMKD4L/BancoAPIimplPort?wsdl")
+	static BancoAPIimplService banco_service;
+
+
     @Override
     public void recibirNotificacionTransferenciaDesdeMedioPago(Map<String, Object> datosTransferencia) {
         if (datosTransferencia == null || datosTransferencia.isEmpty()) {
@@ -30,7 +39,6 @@ public class ServicioTransferenciaImpl implements ServicioTransferencia {
             return;
         }
 
-        try {
             // Validación y extracción de datos
             String rutComercio = getString(datosTransferencia, "rutComercio");
             String cuentaBanco = getString(datosTransferencia, "cuentaBanco");
@@ -44,6 +52,7 @@ public class ServicioTransferenciaImpl implements ServicioTransferencia {
 
             double comision = montoBruto * COMISION_PORCENTAJE;
 
+        try {
             Deposito deposito = new Deposito(
                 UUID.randomUUID().toString(),
                 rutComercio,
@@ -59,6 +68,21 @@ public class ServicioTransferenciaImpl implements ServicioTransferencia {
         } catch (Exception e) {
             LOGGER.severe("[Transferencia] Error inesperado al registrar la transferencia: " + e.getMessage());
         }
+	int codigo_respuesta_banco = -1;
+	try{
+		BancoAPIimpl banco_puerto= banco_service.getBancoAPIimplPort();
+		codigo_respuesta_banco=banco_puerto.realizarTransferencia(cuentaBanco, montoBruto, fecha.toString());
+	}catch(Exception e){
+		LOGGER.severe("[Transferencia] Error inesperado al realizar la transferencia: " + e.getMessage());
+	}
+	switch(codigo_respuesta_banco){
+		case 0:
+			LOGGER.info("[Transferencia] Se realizó  la transferencia con exito.");
+			break;
+		default:
+			LOGGER.severe("[Transferencia] Error insesperado al realizar la transferencia, proveniente del banco");
+	
+	}
     }
 
     @Override
