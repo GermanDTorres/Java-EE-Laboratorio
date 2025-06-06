@@ -28,7 +28,7 @@ public class ServicioTransferenciaImpl implements ServicioTransferencia {
     @Inject
     private RepositorioDepositos repositorioDepositos;
 
-	@WebServiceRef(wsdlLocation="http://localhost:8080/castlemock/mock/soap/project/TMKD4L/BancoAPIimplPort?wsdl")
+	@WebServiceRef(wsdlLocation="http://localhost:8081/castlemock/mock/soap/project/cL0oVz/BancoAPIimplPort?wsdl")
 	static BancoAPIimplService banco_service;
 
 

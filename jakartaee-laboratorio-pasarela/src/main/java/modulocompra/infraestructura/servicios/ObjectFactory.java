@@ -1,5 +1,5 @@
 
-package moduloTransferencia.infraestructura.servicios.impl;
+package modulocompra.infraestructura.servicios;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlElementDecl;
@@ -10,7 +10,7 @@ import javax.xml.namespace.QName;
 /**
  * This object contains factory methods for each 
  * Java content interface and Java element interface 
- * generated in the moduloTransferencia.infraestructura.servicios.impl package. 
+ * generated in the modulocompra.infraestructura.servicios package. 
  * <p>An ObjectFactory allows you to programatically 
  * construct new instances of the Java representation 
  * for XML content. The Java representation of XML 
@@ -28,7 +28,7 @@ public class ObjectFactory {
     private final static QName _RealizarCompraResponse_QNAME = new QName("http://servicios.infraestructura.moduloCompra/", "Realizar_CompraResponse");
 
     /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: moduloTransferencia.infraestructura.servicios.impl
+     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: modulocompra.infraestructura.servicios
      * 
      */
     public ObjectFactory() {

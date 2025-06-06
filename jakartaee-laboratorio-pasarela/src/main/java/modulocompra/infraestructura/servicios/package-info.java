@@ -1,2 +1,2 @@
 @javax.xml.bind.annotation.XmlSchema(namespace = "http://servicios.infraestructura.moduloCompra/")
-package moduloTransferencia.infraestructura.servicios.impl;
+package modulocompra.infraestructura.servicios;

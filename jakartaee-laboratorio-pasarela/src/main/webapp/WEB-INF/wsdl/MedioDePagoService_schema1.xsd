@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" targetNamespace="http://servicios.infraestructura.moduloCompra/" xmlns:tns="http://servicios.infraestructura.moduloCompra/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="Realizar_Compra" type="tns:Realizar_Compra"/>
+
+  <xs:element name="Realizar_CompraResponse" type="tns:Realizar_CompraResponse"/>
+
+  <xs:complexType name="Realizar_Compra">
+    <xs:sequence>
+      <xs:element name="arg0" type="xs:int"/>
+      <xs:element name="arg1" type="xs:int"/>
+      <xs:element name="arg2" type="xs:double"/>
+      <xs:element name="arg3" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Realizar_CompraResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

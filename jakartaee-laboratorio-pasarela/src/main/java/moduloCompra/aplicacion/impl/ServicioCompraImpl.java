@@ -1,5 +1,8 @@
 package moduloCompra.aplicacion.impl;
 
+import moduloCompra.infraestructura.servicios.Medio_De_Pago.MedioDePagoService;
+import moduloCompra.infraestructura.servicios.Medio_De_Pago.MedioDePago;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
@@ -18,6 +21,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import javax.xml.ws.WebServiceRef;
+
 @ApplicationScoped
 public class ServicioCompraImpl implements ServicioCompra {
 
@@ -32,6 +37,9 @@ public class ServicioCompraImpl implements ServicioCompra {
 
     @Inject
     private ServicioComercio servicioComercio;
+
+   @WebServiceRef(wsdlLocation="http://localhost:8081/castlemock/mock/soap/project/hkG2Of/Medio_de_PagoPort?wsdl")
+   static MedioDePagoService medio_de_pago_service;
 
     @Transactional
     @Override
@@ -64,6 +72,10 @@ public class ServicioCompraImpl implements ServicioCompra {
         servicioMonitoreo.notificarPagoOk(compra.getIdCompra(), compra.getIdComercio(), compra.getMonto());
 
         repositorio.guardar(compra);
+
+	MedioDePago medio_de_pago_port = medio_de_pago_service.getMedioDePagoPort();
+	medio_de_pago_port.realizarCompra(Integer.parseInt(compra.getIdCompra()), Integer.parseInt(compra.getIdComercio()), compra.getMonto(), compra.getFecha().toString());
+
         return compra;
     }
 
