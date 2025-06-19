@@ -3,7 +3,6 @@ package moduloTransferencia.dominio;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-
 @Entity
 @Table(name = "deposito")
 public class Deposito {
@@ -19,17 +18,17 @@ public class Deposito {
     private double monto;
 
     @Column(nullable = false)
-    private LocalDateTime fechaHora;
+    private LocalDateTime fechaHora; 
 
     @Column(nullable = false)
     private double comision;
 
     public Deposito() {}
 
-    public Deposito(String rutComercio, double monto, LocalDateTime fecha, double comision) {
+    public Deposito(String rutComercio, double monto, LocalDateTime fechaHora, double comision) {
         this.rutComercio = rutComercio;
         this.monto = monto;
-        this.fechaHora = fecha;
+        this.fechaHora = fechaHora;
         this.comision = comision;
     }
 

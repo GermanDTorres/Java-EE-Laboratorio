@@ -1,36 +1,28 @@
 package moduloMonitoreo.aplicacion.impl;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import moduloMonitoreo.aplicacion.ServicioMonitoreo;
+import jakarta.inject.Inject;
+import io.micrometer.core.instrument.MeterRegistry;
 
 @ApplicationScoped
-public class ServicioMonitoreoImpl implements ServicioMonitoreo {
+public class ServicioMonitoreoImpl {
 
-    @Override
-    public void notificarPago(String idCompra, String idComercio, double monto) {
-        System.out.println("Notificando pago realizado: Compra=" + idCompra + ", Comercio=" + idComercio + ", Monto=" + monto);
+    @Inject
+    MeterRegistry meterRegistry;
+
+    public void registrarPagoConfirmado() {
+        meterRegistry.counter("pagos_confirmados_total").increment();
     }
 
-    @Override
-    public void notificarPagoOk(String idCompra, String idComercio, double monto) {
-        System.out.println("Pago exitoso: Compra=" + idCompra + ", Comercio=" + idComercio + ", Monto=" + monto);
+    public void registrarPagoRechazado() {
+        meterRegistry.counter("pagos_rechazados_total").increment();
     }
 
-    @Override
-    public void notificarPagoError(String idCompra, String idComercio, double monto) {
-        System.out.println("Pago rechazado: Compra=" + idCompra + ", Comercio=" + idComercio + ", Monto=" + monto);
+    public void registrarReporteVentas() {
+        meterRegistry.counter("reportes_ventas_total").increment();
     }
 
-    // Método auxiliar privado
-    private boolean esDatoInvalido(String idCompra, String idComercio, double monto) {
-        return (idCompra == null || idCompra.isBlank()
-                || idComercio == null || idComercio.isBlank()
-                || monto <= 0);
+    public void registrarDepositoBanco() {
+        meterRegistry.counter("depositos_banco_notificados_total").increment();
     }
-
-	@Override
-	public void notificarTransferencia(String infoTransferencia) {
-		// TODO Auto-generated method stub
-		
-	}
 }

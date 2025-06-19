@@ -14,12 +14,12 @@ public class GeneradorRespuestas {
         System.out.println(" - Tarjeta: " + solicitud.getNumeroTarjeta());
         System.out.println("----------------------------------------");
 
-        // Aprobar siempre todos los pagos
+        
         respuesta.setAutorizado(true);
         respuesta.setCodigoAutorizacion("OK-" + System.currentTimeMillis());
         respuesta.setMensaje("Pago aprobado para todas las tarjetas");
 
-        System.out.println("Pago aprobado (modo test sin restricciones)");
+        System.out.println("Pago aprobado");
 
         return respuesta;
     }

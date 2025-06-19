@@ -19,9 +19,11 @@ public class RepositorioCompraJPA implements RepositorioCompra {
     @Override
     @Transactional
     public void guardar(Compra compra) {
-        // Usa merge para actualizar o persistir sin errores si existe el ID
-        em.merge(compra);
-        // No necesitas flush explícito, JTA lo hará al final de la tx
+        if (compra.getIdCompra() == null || em.find(Compra.class, compra.getIdCompra()) == null) {
+            em.persist(compra);  // entidad nueva
+        } else {
+            em.merge(compra);    // entidad existente
+        }
     }
 
     @Override

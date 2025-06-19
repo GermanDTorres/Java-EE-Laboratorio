@@ -1,0 +1,68 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": null,
+  "iteration": 1686390710153,
+  "links": [],
+  "panels": [
+    {
+      "datasource": "InfluxDB",
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 0 },
+      "id": 1,
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom" },
+        "tooltip": { "mode": "single" }
+      },
+      "targets": [
+        {
+          "query": "SELECT sum(\"value\") FROM \"pagos_confirmados_total\" WHERE $timeFilter GROUP BY time(1m) fill(0)",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "queryType": "influxql"
+        },
+        {
+          "query": "SELECT sum(\"value\") FROM \"pagos_rechazados_total\" WHERE $timeFilter GROUP BY time(1m) fill(0)",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "queryType": "influxql"
+        }
+      ],
+      "title": "Pagos Confirmados y Rechazados",
+      "type": "graph"
+    },
+    {
+      "datasource": "InfluxDB",
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 8 },
+      "id": 2,
+      "options": {
+        "legend": { "displayMode": "list", "placement": "bottom" },
+        "tooltip": { "mode": "single" }
+      },
+      "targets": [
+        {
+          "query": "SELECT sum(\"value\") FROM \"depositos_banco_notificados_total\" WHERE $timeFilter GROUP BY time(1m) fill(0)",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "queryType": "influxql"
+        }
+      ],
+      "title": "Depósitos Bancarios Notificados",
+      "type": "graph"
+    }
+  ],
+  "schemaVersion": 37,
+  "style": "dark",
+  "tags": ["pasarela", "monitoreo"],
+  "templating": { "list": [] },
+  "time": { "from": "now-7d", "to": "now" },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Dashboard Pasarela de Pagos",
+  "uid": null,
+  "version": 1
+}
+

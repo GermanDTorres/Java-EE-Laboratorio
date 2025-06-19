@@ -1,9 +1,7 @@
 package moduloCompra.interfase;
 
 import jakarta.inject.Inject;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -11,17 +9,15 @@ import moduloCompra.aplicacion.ServicioCompra;
 import moduloCompra.aplicacion.ServicioResumenVentas;
 import moduloCompra.dominio.Compra;
 import moduloCompra.dominio.EstadoCompra;
-import moduloCompra.infraestructura.limiter.*;
-
 import moduloComercio.aplicacion.ServicioComercio;
-import moduloMonitoreo.aplicacion.ServicioMonitoreo;
+import moduloCompra.infraestructura.limiter.RateLimiter;
+import moduloMonitoreo.aplicacion.impl.ServicioMonitoreoImpl;
 
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 
 @Path("/compra")
 @Produces(MediaType.APPLICATION_JSON)
@@ -38,10 +34,11 @@ public class CompraAPI {
     private ServicioComercio servicioComercio;
 
     @Inject
-    private ServicioMonitoreo servicioMonitoreo;
-    
-    @Inject
     private RateLimiter rateLimiter;
+
+    // INYECCION DEL SERVICIO DE MONITOREO PARA LAS METRICAS
+    @Inject
+    private ServicioMonitoreoImpl servicioMonitoreo;
 
     @POST
     @Path("/procesar")
@@ -50,6 +47,7 @@ public class CompraAPI {
     public Response procesarPago(Compra compra) {
         try {
             if (compra.getIdComercio() == null || compra.getIdComercio().isBlank()) {
+                servicioMonitoreo.registrarPagoRechazado(); 
                 return Response.status(Response.Status.BAD_REQUEST).entity(Map.of(
                     "error", "Debe incluir idComercio en la compra"
                 )).build();
@@ -57,8 +55,9 @@ public class CompraAPI {
 
             String rutComercio = compra.getIdComercio();
 
-            // Aplicar rate limiter
+            // Rate limiting
             if (!rateLimiter.sePermite(rutComercio)) {
+                servicioMonitoreo.registrarPagoRechazado();  
                 return Response.status(Response.Status.TOO_MANY_REQUESTS).entity(Map.of(
                     "error", "Demasiadas solicitudes. Intenta más tarde."
                 )).build();
@@ -69,15 +68,19 @@ public class CompraAPI {
             Compra resultado = servicio.procesarCompra(compra);
 
             if (resultado.getEstado() == EstadoCompra.APROBADA) {
+                servicioMonitoreo.registrarPagoConfirmado();
                 return Response.ok(Map.of(
                     "mensaje", "Pago aprobado y procesado correctamente"
                 )).build();
             } else {
+                servicioMonitoreo.registrarPagoRechazado();
                 return Response.status(Response.Status.BAD_REQUEST).entity(Map.of(
                     "error", "Pago rechazado por el medio de pago"
                 )).build();
             }
+
         } catch (Exception e) {
+            servicioMonitoreo.registrarPagoRechazado();  
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(Map.of(
                 "error", "Error al procesar el pago",
                 "detalle", e.getMessage()
@@ -86,8 +89,7 @@ public class CompraAPI {
     }
 
 
-
-	@GET
+    @GET
     @Path("/listar")
     public List<Compra> listarCompras() {
         return servicio.obtenerCompras();
@@ -106,6 +108,10 @@ public class CompraAPI {
         }
 
         List<Compra> resumen = servicioResumen.resumenVentasDiarias(idComercio);
+
+        // REGISTRO METRICA DE REPORTE DE VENTAS
+        servicioMonitoreo.registrarReporteVentas();
+
         return Response.ok(resumen).build();
     }
 
@@ -134,6 +140,10 @@ public class CompraAPI {
             Date fDesde = sdf.parse(desde);
             Date fHasta = sdf.parse(hasta);
             List<Compra> resumen = servicioResumen.resumenVentasPorPeriodo(idComercio, fDesde, fHasta);
+
+            // REGISTRO METRICA DE REPORTE DE VENTAS
+            servicioMonitoreo.registrarReporteVentas();
+
             return Response.ok(resumen).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(Map.of(

@@ -1,18 +1,23 @@
 package moduloComercio.aplicacion.impl;
 
+import jakarta.annotation.Resource;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
 import moduloComercio.aplicacion.ServicioComercio;
 import moduloComercio.dominio.Comercio;
 import moduloComercio.dominio.EstadoPOS;
 import moduloComercio.dominio.POS;
+import moduloComercio.dominio.Reclamo;
 import moduloComercio.dominio.RepositorioComercio;
+import moduloComercio.infraestructura.messaging.EnviarMensajeReclamoUtil;
+import moduloComercio.infraestructura.messaging.ReclamoRealizadoMessage;
 import moduloComercio.util.HashUtil;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -28,6 +33,12 @@ public class ServicioComercioImpl implements ServicioComercio {
     @Inject
     private RepositorioComercio repositorio;
 
+    @Inject
+    private EnviarMensajeReclamoUtil mensajeReclamo;
+
+    @Resource(lookup = "java:/jms/queue/reclamos")
+    private jakarta.jms.Queue reclamosQueue; // aunque no lo uses directamente, puede quedar por compatibilidad
+
     @Override
     @Transactional
     public void registrarComercio(Comercio comercio) {
@@ -36,8 +47,7 @@ public class ServicioComercioImpl implements ServicioComercio {
 
     @Override
     public Comercio obtenerComercio(String rut) {
-        Optional<Comercio> comercioOpt = repositorio.buscarPorRut(rut);
-        return comercioOpt.orElse(null);
+        return repositorio.buscarPorRut(rut).orElse(null);
     }
 
     @Override
@@ -65,7 +75,7 @@ public class ServicioComercioImpl implements ServicioComercio {
         Optional<Comercio> comercioOpt = repositorio.buscarPorRut(rutComercio);
         if (comercioOpt.isPresent()) {
             Comercio comercio = comercioOpt.get();
-            comercio.agregarPOS(new POS(posId));
+            comercio.agregarPOS(new POS(posId, comercio));
             repositorio.actualizar(comercio);
         } else {
             LOGGER.severe("[ServicioComercio] Comercio no encontrado en altaPOS");
@@ -134,9 +144,7 @@ public class ServicioComercioImpl implements ServicioComercio {
         if (idPOS == null || idPOS.isBlank()) {
             return null;
         }
-
-        List<Comercio> comercios = repositorio.obtenerTodos();
-        for (Comercio comercio : comercios) {
+        for (Comercio comercio : repositorio.obtenerTodos()) {
             POS encontrado = comercio.buscarPOS(idPOS);
             if (encontrado != null) {
                 return encontrado;
@@ -145,4 +153,19 @@ public class ServicioComercioImpl implements ServicioComercio {
         return null;
     }
 
+    @Override
+    public void realizarReclamo(String textoReclamo, String comercioId) {
+        ReclamoRealizadoMessage message = new ReclamoRealizadoMessage(textoReclamo, comercioId);
+        mensajeReclamo.enviarMensaje(message.toJson());
+    }
+
+    @Override
+    @Transactional
+    public void procesarReclamo(String texto, String comercioId) {
+        Reclamo reclamo = new Reclamo();
+        reclamo.setTexto(texto);
+        reclamo.setFecha(LocalDateTime.now());
+        reclamo.setComercioId(comercioId);
+        em.persist(reclamo);
+    }
 }

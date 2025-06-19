@@ -35,6 +35,29 @@
         </dependency>
 
 <dependency>
+    <groupId>org.hibernate.orm</groupId>
+    <artifactId>hibernate-core</artifactId>
+    <version>6.1.5.Final</version> 
+</dependency>
+
+<dependency>
+    <groupId>io.micrometer</groupId>
+    <artifactId>micrometer-core</artifactId>
+    <version>1.12.3</version>
+</dependency>
+<dependency>
+    <groupId>io.micrometer</groupId>
+    <artifactId>micrometer-registry-influx</artifactId>
+    <version>1.12.3</version>
+</dependency>
+
+<dependency>
+  <groupId>org.influxdb</groupId>
+  <artifactId>influxdb-java</artifactId>
+  <version>2.23</version>
+</dependency>
+
+<dependency>
     <groupId>jakarta.xml.ws</groupId>
     <artifactId>jakarta.xml.ws-api</artifactId>
     <version>4.0.0</version>
@@ -282,8 +305,9 @@
                 <configuration>
                     <version>${wildfly.version}</version>
                     <server-config>standalone-full.xml</server-config>
-                    <scripts>
-                        <script>config.cli</script>
+                    <scripts> 
+				 <script>queue.config</script>
+                 <script>config.cli</script>
                     </scripts>
                     <add-user>
                         <users>

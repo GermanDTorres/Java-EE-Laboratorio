@@ -12,19 +12,21 @@ public class POS {
     @Enumerated(EnumType.STRING)
     private EstadoPOS estado;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comercio_rut")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "comercio_rut", nullable = false)
     private Comercio comercio;
 
     public POS() {
     }
 
-    public POS(String id) {
+    // Constructor más seguro
+    public POS(String id, Comercio comercio) {
         this.id = id;
         this.estado = EstadoPOS.INACTIVO;
+        this.comercio = comercio;
     }
 
-    // getters y setters
+    // Getters y Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 

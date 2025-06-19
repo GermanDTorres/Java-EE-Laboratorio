@@ -1,26 +1,29 @@
 package moduloCompra.aplicacion.impl;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Event;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Response;
 
 import moduloCompra.aplicacion.ServicioCompra;
 import moduloCompra.dominio.Compra;
 import moduloCompra.dominio.EstadoCompra;
 import moduloCompra.dominio.RepositorioCompra;
-import moduloMonitoreo.aplicacion.ServicioMonitoreo;
-import moduloComercio.aplicacion.ServicioComercio;
-import moduloComercio.dominio.POS;
 import moduloCompra.infraestructura.AutorizadorPagoHttp;
 import moduloCompra.infraestructura.limiter.RateLimiter;
-import moduloTransferencia.infraestructura.soap.ClienteSOAPBanco;
+import moduloComercio.aplicacion.ServicioComercio;
+import moduloComercio.dominio.POS;
+import moduloTransferencia.aplicacion.ServicioTransferencia;
+import moduloTransferencia.dominio.DatosTransferencia;
 
 import com.medioPago.modelo.SolicitudPagoDTO;
 import com.medioPago.modelo.RespuestaPagoDTO;
 
-import java.text.SimpleDateFormat;
+import moduloMonitoreo.interfase.evento.out.EventoPagoConfirmado;
+import moduloMonitoreo.interfase.evento.out.EventoPagoRechazado;
+import moduloMonitoreo.interfase.evento.out.EventoReporteVentasRealizado;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,59 +34,99 @@ public class ServicioCompraImpl implements ServicioCompra {
     private RepositorioCompra repositorio;
 
     @Inject
-    private ServicioMonitoreo servicioMonitoreo;
-
-    @Inject
     private ServicioComercio servicioComercio;
 
     @Inject
     private AutorizadorPagoHttp clienteMedioPagoMock;
 
     @Inject
-    private ClienteSOAPBanco clienteSOAPBanco;
-
-    @Inject
     private RateLimiter rateLimiter;
 
+    @Inject
+    private ServicioTransferencia servicioTransferencia;
+
+    // Eventos CDI para monitoreo
+    @Inject
+    private Event<EventoPagoConfirmado> eventoPagoConfirmado;
+
+    @Inject
+    private Event<EventoPagoRechazado> eventoPagoRechazado;
+
+    @Inject
+    private Event<EventoReporteVentasRealizado> eventoReporteVentas;
+    
     @Transactional
     @Override
     public Compra procesarCompra(Compra compra) {
         try {
             if (!rateLimiter.allowRequest()) {
+                try {
+                    eventoPagoRechazado.fire(new EventoPagoRechazado("N/A", "N/A"));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                notificarError(compra);
                 throw new WebApplicationException("Límite de solicitudes excedido", 429);
             }
 
-            if (compra == null) {
-                throw new WebApplicationException("Compra no puede ser nula", 400);
-            }
-
-            if (compra.getIdComercio() == null || compra.getIdComercio().trim().isEmpty()) {
-                throw new WebApplicationException("Id de comercio no puede ser vacío", 400);
+            if (compra == null || compra.getIdComercio() == null || compra.getIdComercio().trim().isEmpty()) {
+                try {
+                    eventoPagoRechazado.fire(new EventoPagoRechazado("N/A", "N/A"));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                notificarError(compra);
+                throw new WebApplicationException("Compra inválida o comercio no especificado", 400);
             }
 
             if (!servicioComercio.existeComercio(compra.getIdComercio())) {
+                try {
+                    eventoPagoRechazado.fire(new EventoPagoRechazado("N/A", compra.getIdComercio()));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                notificarError(compra);
                 throw new WebApplicationException("Comercio con id " + compra.getIdComercio() + " no existe", 400);
             }
 
-            // Validar POS
             if (compra.getIdPOS() == null || compra.getIdPOS().trim().isEmpty()) {
+                try {
+                    eventoPagoRechazado.fire(new EventoPagoRechazado("N/A", compra.getIdComercio()));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                notificarError(compra);
                 throw new WebApplicationException("Id de POS es obligatorio", 400);
             }
 
             POS pos = servicioComercio.buscarPOS(compra.getIdPOS());
-            if (pos == null) {
-                throw new WebApplicationException("POS con id " + compra.getIdPOS() + " no existe", 400);
-            }
-
-            if (!pos.isActivo()) {
-                throw new WebApplicationException("POS con id " + compra.getIdPOS() + " está inactivo", 400);
+            if (pos == null || !pos.isActivo()) {
+                try {
+                    eventoPagoRechazado.fire(new EventoPagoRechazado("N/A", compra.getIdComercio()));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                notificarError(compra);
+                throw new WebApplicationException("POS inválido o inactivo", 409);
             }
 
             if (!pos.getComercio().getRut().equals(compra.getIdComercio())) {
+                try {
+                    eventoPagoRechazado.fire(new EventoPagoRechazado("N/A", compra.getIdComercio()));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                notificarError(compra);
                 throw new WebApplicationException("POS no pertenece al comercio indicado", 400);
             }
 
             if (compra.getNumeroTarjeta() == null || compra.getNumeroTarjeta().trim().isEmpty()) {
+                try {
+                    eventoPagoRechazado.fire(new EventoPagoRechazado("N/A", compra.getIdComercio()));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                notificarError(compra);
                 throw new WebApplicationException("Número de tarjeta es obligatorio", 400);
             }
 
@@ -97,19 +140,16 @@ public class ServicioCompraImpl implements ServicioCompra {
 
             if (compra.getMonto() <= 0) {
                 compra.setEstado(EstadoCompra.RECHAZADA);
+                repositorio.guardar(compra);
+
                 try {
-                    servicioMonitoreo.notificarPagoError(compra.getIdCompra(), compra.getIdComercio(), compra.getMonto());
+                    eventoPagoRechazado.fire(new EventoPagoRechazado(compra.getIdCompra(), compra.getIdComercio()));
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                repositorio.guardar(compra);
-                return compra;
-            }
 
-            try {
-                servicioMonitoreo.notificarPago(compra.getIdCompra(), compra.getIdComercio(), compra.getMonto());
-            } catch (Exception ex) {
-                ex.printStackTrace();
+                notificarError(compra);
+                return compra;
             }
 
             SolicitudPagoDTO solicitud = new SolicitudPagoDTO();
@@ -121,14 +161,16 @@ public class ServicioCompraImpl implements ServicioCompra {
             try {
                 respuestaPago = clienteMedioPagoMock.autorizarPago(solicitud);
             } catch (Exception e) {
-                e.printStackTrace();
                 compra.setEstado(EstadoCompra.RECHAZADA);
+                repositorio.guardar(compra);
+
                 try {
-                    servicioMonitoreo.notificarPagoError(compra.getIdCompra(), compra.getIdComercio(), compra.getMonto());
+                    eventoPagoRechazado.fire(new EventoPagoRechazado(compra.getIdCompra(), compra.getIdComercio()));
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                repositorio.guardar(compra);
+
+                notificarError(compra);
                 return compra;
             }
 
@@ -136,30 +178,43 @@ public class ServicioCompraImpl implements ServicioCompra {
 
             if (respuestaPago.isAutorizado()) {
                 compra.setEstado(EstadoCompra.APROBADA);
+
                 try {
-                    servicioMonitoreo.notificarPagoOk(compra.getIdCompra(), compra.getIdComercio(), compra.getMonto());
+                    eventoPagoConfirmado.fire(new EventoPagoConfirmado(compra.getIdCompra(), compra.getIdComercio()));
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
 
+                DatosTransferencia datos = new DatosTransferencia(
+                    UUID.randomUUID().toString(),
+                    compra.getIdComercio(),
+                    compra.getMonto(),
+                    new java.sql.Timestamp(compra.getFecha().getTime()).toLocalDateTime()
+                );
+
                 try {
-                    String fechaFormateada = new SimpleDateFormat("yyyy-MM-dd").format(compra.getFecha());
-                    clienteSOAPBanco.notificarTransferencia(
-                        compra.getIdCompra(),
-                        compra.getIdComercio(),
-                        compra.getMonto(),
-                        fechaFormateada
-                    );
+                    servicioTransferencia.notificarTransferencia(datos);
                 } catch (Exception ex) {
                     ex.printStackTrace();
+                    try {
+                        eventoPagoRechazado.fire(new EventoPagoRechazado(compra.getIdCompra(), compra.getIdComercio()));
+                    } catch (Exception e2) {
+                        e2.printStackTrace();
+                    }
+                    notificarError(compra);
+                    throw new WebApplicationException("Error al notificar transferencia", 500);
                 }
+
             } else {
                 compra.setEstado(EstadoCompra.RECHAZADA);
+
                 try {
-                    servicioMonitoreo.notificarPagoError(compra.getIdCompra(), compra.getIdComercio(), compra.getMonto());
+                    eventoPagoRechazado.fire(new EventoPagoRechazado(compra.getIdCompra(), compra.getIdComercio()));
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
+
+                notificarError(compra);
             }
 
             repositorio.guardar(compra);
@@ -169,7 +224,28 @@ public class ServicioCompraImpl implements ServicioCompra {
             throw we;
         } catch (Exception e) {
             e.printStackTrace();
+
+            if (compra != null) {
+                compra.setEstado(EstadoCompra.RECHAZADA);
+                try {
+                    eventoPagoRechazado.fire(new EventoPagoRechazado(compra.getIdCompra(), compra.getIdComercio()));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                notificarError(compra);
+            }
+
             throw new WebApplicationException("Error interno al procesar compra", 500);
+        }
+    }
+
+
+
+    private void notificarError(Compra compra) {
+        try {
+            // Aquí podrías enviar logs o alertas
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -187,6 +263,10 @@ public class ServicioCompraImpl implements ServicioCompra {
     @Override
     public List<Compra> resumenVentasDiarias(String idComercio) {
         Date hoy = new Date();
+
+        // Emitir evento para monitoreo
+        eventoReporteVentas.fire(new EventoReporteVentasRealizado("diario"));
+
         return repositorio.obtenerCompras().stream()
                 .filter(c -> c.getIdComercio().equals(idComercio)
                         && c.getEstado() == EstadoCompra.APROBADA
@@ -196,6 +276,9 @@ public class ServicioCompraImpl implements ServicioCompra {
 
     @Override
     public List<Compra> resumenVentasPorPeriodo(String idComercio, Date desde, Date hasta) {
+        // Emitir evento para monitoreo
+        eventoReporteVentas.fire(new EventoReporteVentasRealizado("periodo"));
+
         return repositorio.obtenerCompras().stream()
                 .filter(c -> c.getIdComercio().equals(idComercio)
                         && c.getEstado() == EstadoCompra.APROBADA

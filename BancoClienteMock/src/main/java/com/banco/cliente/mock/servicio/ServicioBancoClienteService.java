@@ -7,6 +7,7 @@ import jakarta.xml.ws.WebServiceClient;
 import javax.xml.namespace.QName;
 import java.net.URL;
 
+
 @WebServiceClient(
     name = "ServicioBancoClienteService",
     targetNamespace = "http://servicio.mock.cliente.banco.com/",
@@ -25,7 +26,7 @@ public class ServicioBancoClienteService extends Service {
 
     private static URL getWsdlLocation() {
         try {
-            return new URL("http://localhost:8081/BancoClienteMock?wsdl");
+            return new java.net.URI("http://localhost:8081/BancoClienteMock?wsdl").toURL();
         } catch (Exception e) {
             throw new RuntimeException("❌ Error obteniendo el WSDL", e);
         }

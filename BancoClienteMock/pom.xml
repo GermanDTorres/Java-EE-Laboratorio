@@ -16,18 +16,11 @@
     </properties>
 
     <dependencies>
-        <!-- JAX-WS API -->
-        <dependency>
-            <groupId>jakarta.xml.ws</groupId>
-            <artifactId>jakarta.xml.ws-api</artifactId>
-            <version>4.0.0</version>
-        </dependency>
-
-        <!-- JAX-WS Runtime (incluye soporte SOAP + integración JAXB) -->
+        <!-- JAX-WS Runtime + API (compatible con Jakarta 4.0 y Java 21) -->
         <dependency>
             <groupId>com.sun.xml.ws</groupId>
             <artifactId>jaxws-rt</artifactId>
-            <version>3.0.2</version>
+            <version>4.0.2</version>
         </dependency>
 
         <!-- JAXB API + Runtime -->
@@ -39,13 +32,6 @@
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
-            <version>4.0.4</version>
-        </dependency>
-
-        <!-- Activación de tipos MIME, necesaria para JAXB + SOAP -->
-        <dependency>
-            <groupId>org.glassfish.jaxb</groupId>
-            <artifactId>jaxb-core</artifactId>
             <version>4.0.4</version>
         </dependency>
 
@@ -66,10 +52,13 @@
                 <configuration>
                     <source>21</source>
                     <target>21</target>
+                    <compilerArgs>
+                        <arg>-Xlint:deprecation</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
 
-            <!-- Ejecución del main -->
+            <!-- Ejecución -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>

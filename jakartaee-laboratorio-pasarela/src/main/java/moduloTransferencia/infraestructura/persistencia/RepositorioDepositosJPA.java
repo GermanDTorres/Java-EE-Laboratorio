@@ -16,24 +16,35 @@ import java.util.List;
 public class RepositorioDepositosJPA implements RepositorioDepositos {
 
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
 
     @Override
     @Transactional
     public void guardar(Deposito deposito) {
-        em.persist(deposito);
+        try {
+            em.persist(deposito);
+        } catch (Exception e) {
+            System.err.println("[RepositorioDepositosJPA] ❌ Error al guardar el depósito: " + e.getMessage());
+            throw e; // Re-lanzar para que el contenedor gestione correctamente la transacción
+        }
     }
 
     @Override
     public List<Deposito> consultarPorComercioYRangoFechas(String rutComercio, LocalDateTime desde, LocalDateTime hasta) {
-        return em.createQuery("""
-                SELECT d FROM Deposito d
-                WHERE d.rutComercio = :rut
-                AND d.fecha BETWEEN :desde AND :hasta
-                """, Deposito.class)
-            .setParameter("rut", rutComercio)
-            .setParameter("desde", desde)
-            .setParameter("hasta", hasta)
-            .getResultList();
+        try {
+            return em.createQuery("""
+                    SELECT d FROM Deposito d
+                    WHERE d.rutComercio = :rut
+                    AND d.fecha BETWEEN :desde AND :hasta
+                    ORDER BY d.fecha ASC
+                    """, Deposito.class)
+                .setParameter("rut", rutComercio)
+                .setParameter("desde", desde)
+                .setParameter("hasta", hasta)
+                .getResultList();
+        } catch (Exception e) {
+            System.err.println("[RepositorioDepositosJPA] ❌ Error al consultar depósitos: " + e.getMessage());
+            throw e;
+        }
     }
 }

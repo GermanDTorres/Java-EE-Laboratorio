@@ -1,39 +1,52 @@
 package moduloCompra.infraestructura.limiter;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import java.math.BigDecimal;
 
 @ApplicationScoped
 public class TokenBucketRateLimiter implements RateLimiter {
-    private final int capacity = 10;
-    private final int refillRate = 1; // tokens por segundo
-    private int tokens = capacity;
-    private long lastRefillTimestamp = System.nanoTime();
 
-    @Override
-    public synchronized boolean allowRequest() {
-        refill();
+    private BigDecimal tokens;
+    private final BigDecimal capacity = new BigDecimal("50");
+    private final BigDecimal refillRate = new BigDecimal("10");
+    private long lastRefillTimestamp;
 
-        if (tokens > 0) {
-            tokens--;
-            return true;
-        }
-        return false;
+    public TokenBucketRateLimiter() {
+        this.tokens = capacity;
+        this.lastRefillTimestamp = System.nanoTime();
     }
 
-    private void refill() {
-        long now = System.nanoTime();
-        long elapsedTime = now - lastRefillTimestamp;
-        long tokensToAdd = (elapsedTime / 1_000_000_000L) * refillRate;
-
-        if (tokensToAdd > 0) {
-            tokens = Math.min(capacity, (int)(tokens + tokensToAdd));
-            lastRefillTimestamp = now;
-        }
-    }
-
+    @SuppressWarnings("deprecation")
 	@Override
+    public synchronized boolean allowRequest() {
+        long now = System.nanoTime();
+        BigDecimal elapsedSeconds = new BigDecimal(now - lastRefillTimestamp)
+                .divide(new BigDecimal(1_000_000_000), BigDecimal.ROUND_HALF_UP);
+
+        BigDecimal refillTokens = elapsedSeconds.multiply(refillRate);
+        if (refillTokens.compareTo(BigDecimal.ZERO) > 0) {
+            tokens = tokens.add(refillTokens);
+            if (tokens.compareTo(capacity) > 0) {
+                tokens = capacity;
+            }
+            lastRefillTimestamp = now;
+            System.out.printf("[RateLimiter] ♻️ Tokens recargados: %.9f (+%.9f)%n", tokens, refillTokens);
+        }
+
+        if (tokens.compareTo(BigDecimal.ONE) >= 0) {
+            tokens = tokens.subtract(BigDecimal.ONE);
+            System.out.printf("[RateLimiter] ✅ Token consumido, tokens restantes: %.9f%n", tokens);
+            return true;
+        } else {
+            System.out.printf("[RateLimiter] ❌ No quedan tokens, solicitud rechazada%n");
+            return false;
+        }
+    }
+
+    // Para cumplir con la interfaz aunque no uses esta variante
+    @Override
     public boolean sePermite(String key) {
-        // implementación aquí
-        return true; // o la lógica real
+        // Ignorar key, o implementar lógica si quieres diferenciación por key
+        return allowRequest();
     }
 }

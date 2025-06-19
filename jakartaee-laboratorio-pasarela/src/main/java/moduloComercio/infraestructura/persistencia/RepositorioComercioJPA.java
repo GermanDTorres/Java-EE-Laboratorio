@@ -1,5 +1,6 @@
 package moduloComercio.infraestructura.persistencia;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -9,14 +10,19 @@ import moduloComercio.dominio.RepositorioComercio;
 import java.util.List;
 import java.util.Optional;
 
+@ApplicationScoped
 public class RepositorioComercioJPA implements RepositorioComercio {
 
-    @PersistenceContext
+    @PersistenceContext(unitName = "tallerjava")
     private EntityManager em;
 
     @Override
     public void guardar(Comercio comercio) {
-        em.persist(comercio);
+        if (!existe(comercio.getRut())) {
+            em.persist(comercio);
+        } else {
+            em.merge(comercio);
+        }
     }
 
     @Override
@@ -35,7 +41,6 @@ public class RepositorioComercioJPA implements RepositorioComercio {
         TypedQuery<Comercio> query = em.createQuery("SELECT c FROM Comercio c", Comercio.class);
         return query.getResultList();
     }
-
 
     @Override
     public void eliminarPorRut(String rut) {

@@ -19,4 +19,6 @@ public interface ServicioComercio {
     boolean autenticar(String idComercio, String contrasena);
 
     POS buscarPOS(String idPOS);
+	void realizarReclamo(String textoReclamo, String comercioId);
+	void procesarReclamo(String texto, String comercioId);
 }
