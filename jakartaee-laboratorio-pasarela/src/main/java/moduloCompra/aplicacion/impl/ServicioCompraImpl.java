@@ -243,7 +243,6 @@ public class ServicioCompraImpl implements ServicioCompra {
 
     private void notificarError(Compra compra) {
         try {
-            // Aquí podrías enviar logs o alertas
         } catch (Exception ex) {
             ex.printStackTrace();
         }
