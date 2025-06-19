@@ -165,7 +165,7 @@ Retorna un código de confirmación.
 
 ---
 
-📡 Iteración 3 – Observabilidad y Monitoreo con Grafana e InfluxDB
+## 📡 Iteración 3 – Observabilidad y Monitoreo con Grafana e InfluxDB
 En esta tercera iteración, se abordó un requerimiento no funcional clave: la observabilidad del sistema. Esto implica registrar eventos significativos del funcionamiento interno de la pasarela de pagos, permitiendo así su monitoreo por parte de los equipos de operaciones.
 
 🎯 Objetivos alcanzados
