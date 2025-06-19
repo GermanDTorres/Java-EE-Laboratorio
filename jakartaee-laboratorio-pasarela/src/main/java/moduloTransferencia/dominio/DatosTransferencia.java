@@ -9,7 +9,6 @@ public class DatosTransferencia {
     private LocalDateTime fecha;
 
     public DatosTransferencia() {
-        // Constructor vacío necesario para frameworks de serialización
     }
 
     public DatosTransferencia(String idTransferencia, String idComercio, double monto, LocalDateTime fecha) {
