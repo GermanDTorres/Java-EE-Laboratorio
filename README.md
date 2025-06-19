@@ -168,7 +168,7 @@ Retorna un código de confirmación.
 ## 📡 Iteración 3 – Observabilidad y Monitoreo con Grafana e InfluxDB
 En esta tercera iteración, se abordó un requerimiento no funcional clave: la observabilidad del sistema. Esto implica registrar eventos significativos del funcionamiento interno de la pasarela de pagos, permitiendo así su monitoreo por parte de los equipos de operaciones.
 
-🎯 Objetivos alcanzados
+### 🎯 Objetivos alcanzados
 - Se integró el sistema con InfluxDB para almacenar métricas en tiempo real.
 
 - Se utilizó Grafana como herramienta de visualización de dashboards.
@@ -179,7 +179,7 @@ En esta tercera iteración, se abordó un requerimiento no funcional clave: la o
 
 - El módulo moduloMonitoreo quedó encargado de registrar todos los eventos monitoreables sin acoplarse directamente a otros módulos.
 
-⚙️ Tecnologías utilizadas
+## ⚙️ Tecnologías utilizadas
 InfluxDB: motor de base de datos orientado a series temporales.
 
 Grafana: herramienta web para construir dashboards en tiempo real.
@@ -188,7 +188,7 @@ Micrometer: biblioteca para la instrumentación de métricas en Java.
 
 Docker: para contenerizar Grafana + InfluxDB en entorno local.
 
-📊 Métricas registradas
+## 📊 Métricas registradas
 A través del módulo moduloMonitoreo, se registran en InfluxDB las siguientes métricas del sistema:
 
 Pagos confirmados	pagos_confirmados_total
@@ -199,22 +199,22 @@ Reportes de ventas consultados	reportes_ventas_total
 
 Cada métrica es incrementada por eventos observados a través de eventos CDI y MDB (para reclamos).
 
-📈 Dashboard en Grafana
+## 📈 Dashboard en Grafana
 Se creó un nuevo dashboard en Grafana titulado "Pasarela" con los siguientes paneles:
 
-📦 Pagos realizados: gráfico de barras diferenciando pagos confirmados y rechazados.
+## 📦 Pagos realizados: gráfico de barras diferenciando pagos confirmados y rechazados.
 
-🧾 Reportes de ventas: contador de solicitudes de reporte de ventas por comercio.
+## 🧾 Reportes de ventas: contador de solicitudes de reporte de ventas por comercio.
 
-🏦 Notificaciones de banco: total de transferencias notificados al sistema.
+## 🏦 Notificaciones de banco: total de transferencias notificados al sistema.
 
-🗣️ Reclamos: cantidad de reclamos recibidos por parte de los comercios.
+## 🗣️ Reclamos: cantidad de reclamos recibidos por parte de los comercios.
 
 El dashboard permite observar en tiempo real el comportamiento del sistema.
 
 Grafana e InfluxDB se ejecutan juntos en un contenedor Docker basado en la imagen:
 philhawthorne/docker-influxdb-grafana
 
-✅ Implementaciones destacadas
+## ✅ Implementaciones destacadas
 
 Las métricas se envían a InfluxDB usando Micrometer o InfluxDB Java Client.
