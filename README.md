@@ -215,6 +215,8 @@ Se creó un nuevo dashboard en Grafana titulado "Pasarela" con los siguientes pa
 
 ### El dashboard permite observar en tiempo real el comportamiento del sistema.
 
+---
+
 Grafana e InfluxDB se ejecutan juntos en un contenedor Docker basado en la imagen:
 philhawthorne/docker-influxdb-grafana
 
