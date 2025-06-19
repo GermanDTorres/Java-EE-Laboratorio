@@ -18,7 +18,6 @@ public class AutorizadorPagoHttp {
     public RespuestaPagoDTO autorizarPago(SolicitudPagoDTO solicitud) throws Exception {
         String jsonSolicitud = mapper.writeValueAsString(solicitud);
 
-        // ✅ Log de verificación del JSON que se envía al mock
         System.out.println("📤 JSON enviado al mock:");
         System.out.println(jsonSolicitud);
 
