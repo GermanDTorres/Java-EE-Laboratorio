@@ -123,3 +123,42 @@ MariaDB (persistencia)
 
 SHA-256 (hash de contraseñas)
 
+---
+
+## 🔄 Iteración 2 – Integración con Sistemas Externos
+
+En esta segunda parte del proyecto se implementaron funcionalidades clave para permitir la integración con servicios externos, mejorar la seguridad del sistema y controlar el acceso a los recursos de forma eficiente.
+
+### 🎯 Objetivos alcanzados
+
+- Exposición de APIs REST seguras para comercios
+- Autenticación por RUT y contraseña (con hash SHA-256)
+- Implementación de Rate Limiting por comercio
+- Consumo de servicios externos REST y SOAP
+- Simulación de sistemas externos (mocks)
+
+---
+
+## 🚦 Rate Limiter por Comercio
+
+Se implementó un sistema de **Token Bucket Rate Limiting**.
+
+- Cada comercio tiene un límite de operaciones por minuto.
+- Si el bucket está vacío, se rechaza la operación con un mensaje de error.
+- El bucket se recarga automáticamente con el tiempo.
+
+---
+
+## 🌐 Integración con Sistemas Externos
+
+### 🔸 Servicio REST del Medio de Pago (Mock)
+
+- Simula autorización de pagos de tarjetas.
+- Puede aceptar o rechazar pagos de tarjeta.
+
+### 🔸 Servicio SOAP del Banco del Cliente (Mock)
+Simula el banco que recibe la transferencia.
+
+Se invoca automáticamente desde el módulo Transferencia.
+
+Retorna un código de confirmación.
