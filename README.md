@@ -204,13 +204,16 @@ Se creó un nuevo dashboard en Grafana titulado "Pasarela" con los siguientes pa
 
 ## 📦 Pagos realizados: gráfico de barras diferenciando pagos confirmados y rechazados.
 
-## 🧾 Reportes de ventas: contador de solicitudes de reporte de ventas por comercio.
+## 🧾 Reportes de ventas
+- Contador de solicitudes de reporte de ventas por comercio.
 
-## 🏦 Notificaciones de banco: total de transferencias notificados al sistema.
+## 🏦 Notificaciones de banco 
+- Total de transferencias notificados al sistema.
 
-## 🗣️ Reclamos: cantidad de reclamos recibidos por parte de los comercios.
+## 🗣️ Reclamos 
+- Cantidad de reclamos recibidos por parte de los comercios.
 
-El dashboard permite observar en tiempo real el comportamiento del sistema.
+### El dashboard permite observar en tiempo real el comportamiento del sistema.
 
 Grafana e InfluxDB se ejecutan juntos en un contenedor Docker basado en la imagen:
 philhawthorne/docker-influxdb-grafana
