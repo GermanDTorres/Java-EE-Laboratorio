@@ -180,22 +180,22 @@ En esta tercera iteración, se abordó un requerimiento no funcional clave: la o
 - El módulo moduloMonitoreo quedó encargado de registrar todos los eventos monitoreables sin acoplarse directamente a otros módulos.
 
 ## ⚙️ Tecnologías utilizadas
-InfluxDB: motor de base de datos orientado a series temporales.
+- InfluxDB: motor de base de datos orientado a series temporales.
 
-Grafana: herramienta web para construir dashboards en tiempo real.
+- Grafana: herramienta web para construir dashboards en tiempo real.
 
-Micrometer: biblioteca para la instrumentación de métricas en Java.
+- Micrometer: biblioteca para la instrumentación de métricas en Java.
 
-Docker: para contenerizar Grafana + InfluxDB en entorno local.
+- Docker: para contenerizar Grafana + InfluxDB en entorno local.
 
 ## 📊 Métricas registradas
 A través del módulo moduloMonitoreo, se registran en InfluxDB las siguientes métricas del sistema:
 
-Pagos confirmados	pagos_confirmados_total
-Pagos rechazados	pagos_rechazados_total
-Reclamos recibidos	reclamos_total
-Depósitos notificados por el banco	notificaciones_banco_total
-Reportes de ventas consultados	reportes_ventas_total
+- Pagos confirmados	pagos_confirmados_total
+- Pagos rechazados	pagos_rechazados_total
+- Reclamos recibidos	reclamos_total
+- Depósitos notificados por el banco	notificaciones_banco_total
+- Reportes de ventas consultados	reportes_ventas_total
 
 Cada métrica es incrementada por eventos observados a través de eventos CDI y MDB (para reclamos).
 
@@ -222,4 +222,4 @@ philhawthorne/docker-influxdb-grafana
 
 ## ✅ Implementaciones destacadas
 
-Las métricas se envían a InfluxDB usando Micrometer o InfluxDB Java Client.
+- Las métricas se envían a InfluxDB usando Micrometer o InfluxDB Java Client.
