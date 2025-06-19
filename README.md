@@ -111,17 +111,17 @@ El sistema está dividido por capas:
 ---
 
 ## ⚙️ Tecnologías
-Jakarta EE 10
+- Jakarta EE 10
 
-JAX-RS (API REST)
+- JAX-RS (API REST)
 
-JUnit 5 (Tests)
+- JUnit 5 (Tests)
 
-Maven
+- Maven
 
-MariaDB (persistencia)
+- MariaDB (persistencia)
 
-SHA-256 (hash de contraseñas)
+- SHA-256 (hash de contraseñas)
 
 ---
 
@@ -157,9 +157,10 @@ Se implementó un sistema de **Token Bucket Rate Limiting**.
 - Puede aceptar o rechazar pagos de tarjeta.
 
 ### 🔸 Servicio SOAP del Banco del Cliente (Mock)
-Simula el banco que recibe la transferencia.
 
-Se invoca automáticamente desde el módulo Transferencia.
+- Simula el banco que recibe la transferencia.
+
+- Se invoca automáticamente desde el módulo Transferencia.
 
 Retorna un código de confirmación.
 
