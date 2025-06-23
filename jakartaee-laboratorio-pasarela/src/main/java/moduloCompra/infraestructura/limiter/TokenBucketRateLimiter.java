@@ -43,7 +43,6 @@ public class TokenBucketRateLimiter implements RateLimiter {
         }
     }
 
-    // Para cumplir con la interfaz aunque no uses esta variante
     @Override
     public boolean sePermite(String key) {
         // Ignorar key, o implementar lógica si quieres diferenciación por key

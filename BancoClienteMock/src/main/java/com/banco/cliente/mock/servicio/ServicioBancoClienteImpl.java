@@ -17,6 +17,8 @@ public class ServicioBancoClienteImpl implements ServicioBancoCliente {
     	System.out.println("   🧾 RUT Comercio    : " + rutComercio);
     	System.out.println("   💰 Monto           : $" + monto);
     	System.out.println("   📅 Fecha           : " + fecha);
+    	System.out.println("----------------------------------------------");
+
         return "OK";
     }
 }

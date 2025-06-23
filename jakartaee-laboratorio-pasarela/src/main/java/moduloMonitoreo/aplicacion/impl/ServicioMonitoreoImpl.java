@@ -25,4 +25,8 @@ public class ServicioMonitoreoImpl {
     public void registrarDepositoBanco() {
         meterRegistry.counter("depositos_banco_notificados_total").increment();
     }
+
+    public void registrarReclamo(String tipo) {
+        meterRegistry.counter("reclamos_clasificados_total", "tipo", tipo).increment();
+    }
 }

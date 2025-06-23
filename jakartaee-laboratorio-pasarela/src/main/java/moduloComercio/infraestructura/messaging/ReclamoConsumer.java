@@ -5,16 +5,21 @@ import jakarta.ejb.MessageDriven;
 import jakarta.inject.Inject;
 import jakarta.jms.Message;
 import jakarta.jms.MessageListener;
-import jakarta.jms.JMSException;
+import jakarta.jms.TextMessage;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import moduloComercio.dominio.Reclamo;
 import org.jboss.logging.Logger;
-import moduloComercio.aplicacion.ServicioComercio;
-import io.micrometer.core.instrument.MeterRegistry;
+import org.json.JSONObject;import jakarta.enterprise.event.Event;
+import moduloMonitoreo.interfase.evento.out.EventoReclamoClasificado;
+
+import java.time.LocalDateTime;
+import java.util.Random;
 
 @MessageDriven(
     activationConfig = {
-        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "jakarta.jms.Queue"),
-        @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "java:jboss/exported/jms/queue/reclamos"),
-        @ActivationConfigProperty(propertyName = "maxSession", propertyValue = "1")
+        @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "java:/jms/queue/reclamos"),
+        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "jakarta.jms.Queue")
     }
 )
 public class ReclamoConsumer implements MessageListener {
@@ -22,25 +27,47 @@ public class ReclamoConsumer implements MessageListener {
     private static final Logger log = Logger.getLogger(ReclamoConsumer.class);
 
     @Inject
-    ServicioComercio servicioComercio;
+    Event<EventoReclamoClasificado> eventoReclamoClasificado;
+    
+    @PersistenceContext(unitName = "tallerjava")
+    EntityManager em;
 
-    @Inject
-    MeterRegistry meterRegistry;
+    private static final String[] RESPUESTAS = {"POSITIVO", "NEGATIVO", "NEUTRO"};
+    private static final Random RANDOM = new Random();
 
     @Override
     public void onMessage(Message message) {
         try {
-            String body = message.getBody(String.class);
-            log.infof("Reclamo recibido: %s", body);
+            if (message instanceof TextMessage) {
+                String json = ((TextMessage) message).getText();
+                log.infof("📥 Mensaje recibido desde cola: %s", json);
 
-            ReclamoRealizadoMessage reclamo = ReclamoRealizadoMessage.fromJson(body);
+                JSONObject obj = new JSONObject(json);
+                String texto = obj.getString("texto");
+                String comercioId = obj.getString("comercioId");
 
-            servicioComercio.procesarReclamo(reclamo.texto(), reclamo.comercioId());
+                // ⏳ Simular demora aleatoria entre 1 y 5 segundos
+                int delay = RANDOM.nextInt(5) + 1;
+                log.infof("⏱ Esperando %d segundos antes de procesar...", delay);
+                Thread.sleep(delay * 1000L);
 
-            meterRegistry.counter("reclamos_total").increment();
+                // 🧠 Asignar respuesta aleatoria
+                String respuesta = RESPUESTAS[RANDOM.nextInt(RESPUESTAS.length)];
+                log.infof("💬 Respuesta asignada al reclamo: %s", respuesta);
 
-        } catch (JMSException e) {
-            log.errorf("Error al procesar reclamo JMS: %s", e.getMessage());
+                // 💾 Guardar en base de datos
+                Reclamo reclamo = new Reclamo();
+                reclamo.setTexto(texto);
+                reclamo.setComercioId(comercioId);
+                reclamo.setFecha(LocalDateTime.now());
+                reclamo.setRespuesta(respuesta);
+
+                em.persist(reclamo);
+                eventoReclamoClasificado.fire(new EventoReclamoClasificado(respuesta.toLowerCase())); // positivo, negativo, neutro
+                log.info("✅ Reclamo persistido con éxito.");
+            }
+        } catch (Exception e) {
+            log.error("❌ Error al procesar mensaje JMS", e);
         }
     }
 }

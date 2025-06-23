@@ -40,4 +40,9 @@ public class ObserverMonitoreo {
         log.infof("🏦 Depósito notificado: comercio=%s, monto=%.2f", event.getRutComercio(), event.getMonto());
         servicioMonitoreo.registrarDepositoBanco();
     }
+    
+    public void onReclamoClasificado(@Observes EventoReclamoClasificado event) {
+        log.infof("📬 [MONITOREO] Reclamo clasificado como: %s", event.getTipo());
+        servicioMonitoreo.registrarReclamo(event.getTipo());
+    }
 }

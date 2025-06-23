@@ -25,8 +25,8 @@ public class RepositorioDepositosJPA implements RepositorioDepositos {
             em.persist(deposito);
         } catch (Exception e) {
             System.err.println("[RepositorioDepositosJPA] ❌ Error al guardar el depósito: " + e.getMessage());
-            throw e; // Re-lanzar para que el contenedor gestione correctamente la transacción
-        }
+            throw e;  
+            }
     }
 
     @Override

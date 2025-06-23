@@ -12,7 +12,8 @@ public class ClienteSOAPBanco {
 	private static final String NAMESPACE = "http://servicio.mock.cliente.banco.com/";
     private static final String SERVICE_URL = "http://localhost:8081/BancoClienteMock";
 
-    public boolean notificarTransferencia(String idTransferencia, String rutComercio, Double monto, String fecha) {
+    @SuppressWarnings("deprecation")
+	public boolean notificarTransferencia(String idTransferencia, String rutComercio, Double monto, String fecha) {
         try {
             SOAPConnectionFactory soapConnectionFactory = SOAPConnectionFactory.newInstance();
             SOAPConnection connection = soapConnectionFactory.createConnection();
