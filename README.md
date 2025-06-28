@@ -326,7 +326,7 @@ Gráfico que compara la cantidad de pagos exitosos y rechazados procesados por l
 
 ![Screenshot from 2025-06-28 18-51-51](https://github.com/user-attachments/assets/9018610c-4761-414a-9782-1f47f4dd2234)
 
-Útil para monitorear la tasa de éxito en las transacciones y detectar posibles fallos con medios de pago.
+`Útil para monitorear la tasa de éxito en las transacciones y detectar posibles fallos con medios de pago.`
 ---
 🧾 Reportes de Ventas y Transferencias Bancarias
 Dos paneles independientes que visualizan:
@@ -337,13 +337,13 @@ Dos paneles independientes que visualizan:
 
 ![Screenshot from 2025-06-28 18-52-42](https://github.com/user-attachments/assets/f8a63585-053b-4d93-9c11-ac4a0457914a)
 
-Permite medir la actividad comercial y el flujo financiero hacia los comercios.
+`Permite medir la actividad comercial y el flujo financiero hacia los comercios.`
 
 ---
 
 # 📬 Iteración 4: Mensajería Asíncrona
 
-Esta iteración incorpora procesamiento asincrónico de reclamos mediante **Jakarta Messaging (JMS)**, con una arquitectura desacoplada basada en una **cola point-to-point** para escalar el sistema y mejorar su resiliencia.
+`Esta iteración incorpora procesamiento asincrónico de reclamos mediante **Jakarta Messaging (JMS)**, con una arquitectura desacoplada basada en una **cola point-to-point** para escalar el sistema y mejorar su resiliencia.`
 
 ---
 
