@@ -1,4 +1,4 @@
-# 💳 Pasarela de Pagos — Prototipo Java EE
+# 💳 Pasarela de Pagos — Proyecto Java EE
 
 Una **Pasarela de Pagos** es un sistema tecnológico que actúa como **intermediario seguro** entre clientes, comercios y entidades financieras, autorizando y gestionando pagos electrónicos de forma eficiente.
 
