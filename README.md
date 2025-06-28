@@ -75,13 +75,13 @@ Gestiona las operaciones de compra y pago de los clientes.
 
 Responsabilidades principales:
 
-🧾 Registrar compras
+- 🧾 Registrar compras
 
-💳 Procesar pagos
+- 💳 Procesar pagos
 
-📊 Emitir reportes por comercio
+- 📊 Emitir reportes por comercio
 
-📢 Notificar resultados a monitoreo
+- 📢 Notificar resultados a monitoreo
 ---
 ### 🏪 moduloComercio — Administración de Comercios
 Administra los datos de los comercios y sus terminales de punto de venta (POS).
