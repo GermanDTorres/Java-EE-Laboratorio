@@ -49,8 +49,6 @@ Desarrollar una plataforma que permita:
 
 ### 🗂️ Diagrama de Arquitectura General del Sistema
 
-📌 **Título sugerido para imagen**: _"Arquitectura de módulos y sus relaciones"_
-
 ![img6](https://github.com/user-attachments/assets/260edcdf-62d9-46d6-a1e8-dfbba7397c78)
 
 El sistema está dividido por capas:
@@ -181,7 +179,7 @@ Sistema `Token Bucket` que:
 ![ratelimiter](https://github.com/user-attachments/assets/fe19b107-11df-4c57-81fb-188cecfc6ec4)
 
 ### 🧪 Pruebas con JMeter
-📌 _Ejemplo de carga simulado_  
+ 
 ![Screenshot](https://github.com/user-attachments/assets/1fd32f7d-40f1-4a4c-ae46-234df38c26e4)
 
 ---
@@ -196,19 +194,25 @@ Sistema `Token Bucket` que:
 - `reportes_ventas_total`
 
 ### 📊 Visualización de Reclamos Clasificados  
+
 🟩 Positivos | 🟨 Neutros | 🟥 Negativos  
+
 ![reclamos](https://github.com/user-attachments/assets/38385480-9842-410c-968f-70107e864b69)
 
 ---
 
 ### 💳 Pagos Confirmados vs Rechazados  
+
 ✅ Confirmados | ❌ Rechazados  
+
 ![pagos](https://github.com/user-attachments/assets/9018610c-4761-414a-9782-1f47f4dd2234)
 
 ---
 
 ### 🧾 Reportes y Transferencias  
+
 📄 Reportes generados | 🏦 Transferencias acreditadas  
+
 ![ventas-transferencias](https://github.com/user-attachments/assets/f8a63585-053b-4d93-9c11-ac4a0457914a)
 
 ---
