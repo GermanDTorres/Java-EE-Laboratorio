@@ -82,7 +82,7 @@ Responsabilidades principales:
 📊 Emitir reportes por comercio
 
 📢 Notificar resultados a monitoreo
-
+---
 ### 🏪 moduloComercio — Administración de Comercios
 Administra los datos de los comercios y sus terminales de punto de venta (POS).
 
@@ -95,7 +95,7 @@ Responsabilidades:
 - 🔐 Cambio de contraseña
 
 - ✅ Validación de credenciales
-
+---
 ### 🔁 moduloTransferencia — Gestión de Transferencias
 Se encarga de registrar las transferencias a cuentas de los comercios, aplicando comisiones.
 
@@ -106,7 +106,7 @@ Funciones clave:
 - 🏦 Registrar depósitos bancarios
 
 - 📆 Consultar depósitos por comercio y fecha
-
+---
 ### 📈 moduloMonitoreo — Observabilidad del Sistema
 Monitorea y registra eventos relacionados con pagos, transferencias y reclamos.
 
