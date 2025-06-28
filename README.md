@@ -116,7 +116,7 @@ Notificaciones que maneja:
 
 - ✅ Pago exitoso
 
-- ❌ Pago fallido
+- ❌ Pago rechazado
 
 - 🔁 Transferencias
 
