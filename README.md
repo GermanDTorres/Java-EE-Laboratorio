@@ -39,7 +39,7 @@ Este proyecto implementa un **prototipo funcional** desarrollado con **Jakarta E
 | 🧑‍💳 Cliente      | Humano    | Realiza la compra usando su tarjeta.                              |
 | 🖥️ POS            | Software  | Envia la solicitud de compra a la pasarela.                       |
 | 🧑‍🔧 Operario      | Humano    | Supervisa el estado del sistema y sus métricas.                   |
-| 🧑‍💻 Soporte       | Humano    | Recibe y clasifica reclamos de los comercios.                     |
+| 🧑‍💻 Soporte       | Software   | Recibe y clasifica reclamos de los comercios.                     |
 | 🌐 Medio de pago  | Sistema   | Simulado vía REST, autoriza o rechaza pagos.                      |
 | 🏛️ Banco Cliente | Sistema   | Simulado vía SOAP, notifica depósitos realizados.                 |
 
