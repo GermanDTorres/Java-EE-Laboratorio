@@ -70,46 +70,55 @@ El sistema está dividido por capas:
 
 ## 🧩 Módulos
 
-### 1. `moduloCompra`
+### 🛒 moduloCompra — Gestión de Compras
 Gestiona las operaciones de compra y pago de los clientes.
 
-**Responsabilidades principales:**
-- Registrar compras
-- Procesar pagos
-- Emitir reportes por comercio
-- Notificar resultados a monitoreo
+Responsabilidades principales:
 
----
+🧾 Registrar compras
 
-### 2. `moduloComercio`
+💳 Procesar pagos
+
+📊 Emitir reportes por comercio
+
+📢 Notificar resultados a monitoreo
+
+### 🏪 moduloComercio — Administración de Comercios
 Administra los datos de los comercios y sus POS (terminales de punto de venta).
 
-**Responsabilidades:**
-- Alta de comercio
-- Alta/baja de POS
-- Cambio de contraseña
-- Validación de credenciales
+Responsabilidades:
 
----
+📝 Alta de comercio
 
-### 3. `moduloTransferencia`
-Se encarga de registrar las transferencias a cuentas de los comercios con descuento por comisión.
+🖥️ Alta/baja de POS
 
-**Funciones clave:**
-- Recibir notificaciones desde el medio de pago
-- Registrar depósitos bancarios
-- Consultar depósitos por comercio y fecha
+🔐 Cambio de contraseña
 
----
+✅ Validación de credenciales
 
-### 4. `moduloMonitoreo`
+### 🔁 moduloTransferencia — Gestión de Transferencias
+Registra las transferencias a cuentas de los comercios con descuento por comisión.
+
+Funciones clave:
+
+📬 Recibir notificaciones desde el medio de pago
+
+🏦 Registrar depósitos bancarios
+
+📆 Consultar depósitos por comercio y fecha
+
+### 📈 moduloMonitoreo — Observabilidad del Sistema
 Monitorea y registra eventos relacionados con pagos y transacciones.
 
-**Notificaciones que maneja:**
-- Pago registrado
-- Pago exitoso
-- Pago fallido
-- Transferencias
+Notificaciones que maneja:
+
+📥 Pago registrado
+
+✅ Pago exitoso
+
+❌ Pago fallido
+
+🔁 Transferencias
 
 ---
 
