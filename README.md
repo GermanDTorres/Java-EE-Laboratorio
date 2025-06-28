@@ -1,6 +1,47 @@
-# Pasarela de Pagos - Proyecto Jakarta EE
+# 💳 Pasarela de Pagos — Prototipo Java EE
 
-Este es un sistema de pasarela de pagos desarrollado con **Jakarta EE**, utilizando una arquitectura basada en **DDD (Domain-Driven Design)**, con separación por módulos funcionales: Compra, Comercio, Transferencia y Monitoreo.
+Una **Pasarela de Pagos** es un sistema tecnológico que actúa como **intermediario seguro** entre clientes, comercios y entidades financieras, autorizando y gestionando pagos electrónicos de forma eficiente.
+
+Este proyecto implementa un **prototipo funcional** desarrollado con **Jakarta EE**, diseñado para simular el flujo real de operaciones que realizan plataformas como MercadoPago, RedPagos o PayPal.
+
+---
+
+## 🎯 Objetivo del sistema
+
+> Desarrollar una plataforma que permita:
+>
+> - Autorizar y procesar compras hechas con tarjeta.
+> - Registrar comercios y puntos de venta (POS).
+> - Facilitar el depósito del dinero al banco del comercio.
+> - Generar reportes de ventas y métricas del sistema.
+> - Atender reclamos mediante mensajería asincrónica.
+
+---
+
+## 🧩 Funcionalidades principales
+
+| 🔹 Función                         | 💬 Descripción breve                                                                 |
+|----------------------------------|--------------------------------------------------------------------------------------|
+| 🏪 Registro de Comercios         | Alta de comercios con datos y cuenta bancaria para depósitos.                       |
+| 💰 Procesamiento de Pagos        | Validación de tarjeta a través de un medio de pago externo (simulado vía REST).     |
+| 🧾 Reportes de Ventas            | Resúmenes diarios, por período y totales por estado (aceptadas, rechazadas, etc.). |
+| 🏦 Transferencias a Bancos       | Envío automático del dinero al banco del comercio una vez notificado el depósito.  |
+| 📬 Gestión de Reclamos           | Envío y clasificación automática de reclamos vía cola JMS.                         |
+| 📈 Monitoreo del Sistema         | Métricas exportadas a Prometheus/Grafana usando eventos CDI y Micrometer.          |
+
+---
+
+## 👥 Actores del sistema
+
+| Actor            | Tipo      | Rol principal                                                     |
+|------------------|-----------|--------------------------------------------------------------------|
+| 🧑‍💼 Comercio     | Entidad   | Se registra y realiza ventas usando POS.                          |
+| 🧑‍💳 Cliente      | Humano    | Realiza la compra usando su tarjeta.                              |
+| 🖥️ POS            | Software  | Envia la solicitud de compra a la pasarela.                       |
+| 🧑‍🔧 Operario      | Humano    | Supervisa el estado del sistema y sus métricas.                   |
+| 🧑‍💻 Soporte       | Humano    | Recibe y clasifica reclamos de los comercios.                     |
+| 🌐 Medio de pago  | Sistema   | Simulado vía REST, autoriza o rechaza pagos.                      |
+| 🏛️ Banco Cliente | Sistema   | Simulado vía SOAP, notifica depósitos realizados.                 |
 
 ---
 
