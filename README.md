@@ -20,7 +20,7 @@ Desarrollar una plataforma que permita:
 
 ## 🧩 Funcionalidades principales
 
-| 🔹 Función                         | 💬 Descripción breve                                                                 |
+| Función                         |  Descripción breve                                                                 |
 |----------------------------------|--------------------------------------------------------------------------------------|
 | 🏪 Registro de Comercios         | Alta de comercios con datos y cuenta bancaria para depósitos.                       |
 | 💰 Procesamiento de Pagos        | Validación de tarjeta a través de un medio de pago externo (simulado vía REST).     |
