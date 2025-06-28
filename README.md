@@ -45,6 +45,25 @@ Este proyecto implementa un **prototipo funcional** desarrollado con **Jakarta E
 
 ---
 
+## 🛠️ Arquitectura
+
+El sistema está dividido por capas:
+
+📦 modulo
+┣ 📂 dominio
+┣ 📂 aplicacion
+┣ 📂 interfaz
+┗ 📂 infraestructura
+
+
+### Capas:
+- `dominio`: Entidades y lógica de negocio principal.
+- `aplicacion`: Casos de uso (servicios).
+- `infraestructura`: Repositorios, base de datos, adaptadores.
+- `interfaz`: API REST.
+
+---
+
 ## 🧩 Módulos
 
 ### 1. `moduloCompra`
@@ -87,25 +106,6 @@ Monitorea y registra eventos relacionados con pagos y transacciones.
 - Pago exitoso
 - Pago fallido
 - Transferencias
-
----
-
-## 🛠️ Arquitectura
-
-El sistema está dividido por capas:
-
-📦 modulo
-┣ 📂 dominio
-┣ 📂 aplicacion
-┣ 📂 interfaz
-┗ 📂 infraestructura
-
-
-### Capas:
-- `dominio`: Entidades y lógica de negocio principal.
-- `aplicacion`: Casos de uso (servicios).
-- `infraestructura`: Repositorios, base de datos, adaptadores.
-- `interfaz`: API REST.
 
 ---
 
