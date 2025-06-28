@@ -229,7 +229,3 @@ Sistema `Token Bucket` que:
 - JUnit 5  
 - MariaDB  
 - Docker
-
----
-
-🎉 **Fin del README** — ¡Gracias por revisar el proyecto!
