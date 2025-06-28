@@ -113,6 +113,27 @@ Monitorea y registra eventos relacionados con pagos y transacciones.
 
 ---
 
+## 🔄 Relaciones entre módulos
+
+La Pasarela de Pagos está compuesta por varios módulos que interactúan mediante distintos mecanismos (REST, eventos, JMS, SOAP). A continuación se resumen las principales conexiones entre ellos:
+
+| 🧩 Módulo origen         | 🔁 Relación       | 🎯 Módulo destino / tecnología         | 💬 Descripción breve                                  |
+|-------------------------|------------------|----------------------------------------|--------------------------------------------------------|
+| `moduloComercio`        | JMS            | `ReclamoConsumer`                      | Envía reclamos a través de mensajería JMS.             |
+| `ReclamoConsumer`       | evento         | `moduloMonitoreo`                      | Emite eventos de reclamos clasificados.                |
+| `moduloComercio`        | persistencia    | `BD_Comercio`                          | Guarda comercios y POS.                               |
+| `moduloCompra`          | REST           | `AutorizadorPagoHttp`                  | Valida la compra con el medio de pago simulado.       |
+| `moduloCompra`          | evento         | `moduloMonitoreo`                      | Emite eventos por compras aprobadas o rechazadas.     |
+| `moduloCompra`          | persistencia    | `BD_Compra`                            | Guarda información de compras realizadas.             |
+| `moduloCompra`          | uso interno    | `RateLimiter`                          | Controla el flujo de solicitudes de compra.           |
+| `moduloTransferencia`   | SOAP           | `ClienteBancoSOAP`                     | Simula depósito bancario a comercio.                  |
+| `moduloTransferencia`   | evento         | `moduloMonitoreo`                      | Emite evento al confirmar depósito.                   |
+| `moduloTransferencia`   | persistencia    | `BD_Transferencia`                     | Guarda transferencias realizadas.                     |
+| `moduloMonitoreo`       | escucha evento | Todos los emisores de eventos          | Observa todos los eventos del sistema.                |
+| `moduloMonitoreo`       | persistencia    | `BD_Monitoreo`                         | Guarda métricas y eventos procesados.                 |
+
+---
+
 ## 🔐 Autenticación
 
 - Los comercios se identifican por RUT + contraseña.
@@ -191,6 +212,11 @@ Se implementó un sistema de **Token Bucket Rate Limiting**.
 - Cada comercio tiene un límite de operaciones por minuto.
 - Si el bucket está vacío, se rechaza la operación con un mensaje de error.
 - El bucket se recarga automáticamente con el tiempo.
+
+
+### 🔄 Diagrama Secuencia del RateLimiter
+
+![ratelimiter](https://github.com/user-attachments/assets/fe19b107-11df-4c57-81fb-188cecfc6ec4)
 
 ---
 
