@@ -199,9 +199,13 @@ Sistema `Token Bucket` que:
 🟩 Positivos | 🟨 Neutros | 🟥 Negativos  
 ![reclamos](https://github.com/user-attachments/assets/38385480-9842-410c-968f-70107e864b69)
 
+---
+
 ### 💳 Pagos Confirmados vs Rechazados  
 ✅ Confirmados | ❌ Rechazados  
 ![pagos](https://github.com/user-attachments/assets/9018610c-4761-414a-9782-1f47f4dd2234)
+
+---
 
 ### 🧾 Reportes y Transferencias  
 📄 Reportes generados | 🏦 Transferencias acreditadas  
