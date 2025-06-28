@@ -47,7 +47,7 @@ Este proyecto implementa un **prototipo funcional** desarrollado con **Jakarta E
 
 ## 🛠️ Arquitectura
 
-# 🗂️ Diagrama de Arquitectura General del Sistema
+### 🗂️ Diagrama de Arquitectura General del Sistema
 
 ![img6](https://github.com/user-attachments/assets/260edcdf-62d9-46d6-a1e8-dfbba7397c78)
 
