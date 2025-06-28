@@ -220,6 +220,12 @@ Se implementó un sistema de **Token Bucket Rate Limiting**.
 
 ---
 
+### 🧪 Pruebas de carga y control de flujo con JMeter
+
+![Screenshot from 2025-06-28 18-25-45](https://github.com/user-attachments/assets/1fd32f7d-40f1-4a4c-ae46-234df38c26e4)
+
+---
+
 ## 🌐 Integración con Sistemas Externos
 
 ### 🔸 Servicio REST del Medio de Pago (Mock)
