@@ -2,7 +2,7 @@
 
 Una **Pasarela de Pagos** es un sistema tecnológico que actúa como **intermediario seguro** entre clientes, comercios y entidades financieras, autorizando y gestionando pagos electrónicos de forma eficiente.
 
-Este proyecto implementa un **prototipo funcional** desarrollado con **Jakarta EE**, diseñado para simular el flujo real de operaciones que realizan plataformas como MercadoPago, RedPagos o PayPal.
+Este proyecto implementa un **prototipo funcional** desarrollado con **Jakarta EE**, diseñado para simular el flujo real de operaciones que realizan plataformas como Getnet.
 
 ---
 
