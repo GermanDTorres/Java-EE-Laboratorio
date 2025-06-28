@@ -8,13 +8,13 @@ Este proyecto implementa un **prototipo funcional** desarrollado con **Jakarta E
 
 ## 🎯 Objetivo del sistema
 
-> Desarrollar una plataforma que permita:
->
-> - Autorizar y procesar compras hechas con tarjeta.
-> - Registrar comercios y puntos de venta (POS).
-> - Facilitar el depósito del dinero al banco del comercio.
-> - Generar reportes de ventas y métricas del sistema.
-> - Atender reclamos mediante mensajería asincrónica.
+ Desarrollar una plataforma que permita:
+
+ - Autorizar y procesar compras hechas con tarjeta.
+ - Registrar comercios y puntos de venta (POS).
+ - Facilitar el depósito del dinero al banco del comercio.
+ - Generar reportes de ventas y métricas del sistema.
+ - Atender reclamos mediante mensajería asincrónica.
 
 ---
 
