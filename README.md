@@ -136,19 +136,67 @@ Notificaciones manejadas:
 
 ## 📊 Casos de Uso Principales
 
-### 1. Procesar Compra
-- El cliente realiza una compra.
-- Se valida POS y comercio.
-- Se registra la compra.
-- Se notifica resultado.
+### 🏪 Comercio
 
-### 2. Consultar Ventas
-- Comercio se autentica.
-- Visualiza ventas por fecha/estado.
+- **Registrar Comercio**  
+  Crear un comercio nuevo con sus datos básicos (RUT, nombre, contraseña).
 
-### 3. Alta de POS
-- Comercio solicita un nuevo POS.
-- Se asigna y persiste.
+- **Listar Comercios**  
+  Obtener la lista de comercios registrados.
+
+- **Obtener Comercio**  
+  Consultar detalle de un comercio específico por su RUT.
+
+- **Cambiar Contraseña**  
+  Comercio autenticado actualiza su contraseña.
+
+- **Alta de POS**  
+  Comercio agrega un nuevo punto de venta (POS).
+
+- **Cambiar Estado POS**  
+  Comercio activa o desactiva un POS.
+
+- **Realizar Reclamo**  
+  Comercio envía un reclamo o comentario al área de soporte.
+
+---
+
+### 🛒 Compra
+
+- **Procesar Compra**  
+  El cliente envía una compra para ser procesada y recibe el resultado.
+
+- **Consultar Resumen de Ventas**  
+  El comercio autenticado consulta el resumen de ventas diario o por período.
+
+- **Consultar Monto Vendido**  
+  El comercio autenticado consulta el monto actual vendido.
+
+---
+
+## 🌐 APIs REST
+
+A continuación se detallan los principales endpoints REST del sistema, organizados por módulo. Todos responden en formato `application/json`.
+
+### 🏪 Comercio — `/comercios`
+
+- `POST /comercios` — Registra un nuevo comercio  
+- `GET /comercios` — Lista todos los comercios  
+- `GET /comercios/{id}` — Obtiene un comercio  
+- `PUT /comercios/{id}/contrasena` — Cambia contraseña  
+- `POST /comercios/{id}/pos/{posId}` — Alta de POS  
+- `PUT /comercios/{id}/pos/{posId}/estado` — Activar/desactivar POS  
+- `POST /comercios/{id}/reclamo` — Enviar reclamo  
+
+---
+
+### 💳 Compra — `/compra`
+
+- `POST /compra/procesar` — Procesa compra  
+- `GET /compra/listar` — Lista todas las compras  
+- `GET /compra/resumenDiario/{idComercio}` — Ventas del día (requiere auth)  
+- `GET /compra/resumenPeriodo` — Ventas por período (requiere auth)  
+- `GET /compra/montoActual/{idComercio}` — Monto vendido actual (requiere auth)  
 
 ---
 
@@ -220,10 +268,10 @@ Sistema `Token Bucket` que:
 ## 📬 Mensajería Asíncrona con JMS
 
 **Flujo de Reclamos:**
-1. Comercio llama `realizarReclamo(...)`
-2. Se envía mensaje a la cola `java:/jms/queue/reclamos`
-3. `ReclamoConsumer` procesa, clasifica y persiste.
-4. Se actualizan métricas en `moduloMonitoreo`.
+- Comercio llama `realizarReclamo(...)`
+- Se envía mensaje a la cola `java:/jms/queue/reclamos`
+-  `ReclamoConsumer` procesa, clasifica y persiste.
+- Se actualizan métricas en `moduloMonitoreo`.
 
 ---
 
