@@ -27,7 +27,7 @@ Desarrollar una plataforma que permita:
 | 🧾 Reportes de Ventas            | Resúmenes diarios, por período y totales por estado (aceptadas, rechazadas, etc.). |
 | 🏦 Transferencias a Bancos       | Envío automático del dinero al banco del comercio una vez notificado el depósito.  |
 | 📬 Gestión de Reclamos           | Envío y clasificación automática de reclamos vía cola JMS.                         |
-| 📈 Monitoreo del Sistema         | Métricas exportadas a Prometheus/Grafana usando eventos CDI y Micrometer.          |
+| 📈 Monitoreo del Sistema         | Métricas exportadas a Grafana usando eventos CDI y Micrometer.          |
 
 ---
 
